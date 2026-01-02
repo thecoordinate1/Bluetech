@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
+import { mapSupabaseError } from '@/lib/errorMapping';
 
 const supabase = createClient();
 
@@ -46,7 +47,7 @@ export async function signUpWithEmail(
   });
 
   if (signUpError) {
-    return { data: authData, error: signUpError };
+    return { data: authData, error: mapSupabaseError(signUpError, 'Sign Up') };
   }
 
   // The database trigger 'on_auth_user_created' now handles the creation 
@@ -63,8 +64,9 @@ export async function signInWithEmail(email: string, password: string) {
     });
     if (error) {
       console.error("Supabase signInWithPassword error:", error);
+      return { data, error: mapSupabaseError(error, 'Sign In') };
     }
-    return { data, error };
+    return { data, error: null };
   } catch (err) {
     console.error("Unexpected error in signInWithEmail:", err);
     return { data: { user: null, session: null }, error: err as any };
@@ -82,28 +84,28 @@ export async function signInWithGoogle() {
       },
     },
   });
-  return { data, error };
+  return { data, error: error ? mapSupabaseError(error, 'Google Sign In') : null };
 }
 
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
-  return { error };
+  return { error: error ? mapSupabaseError(error, 'Sign Out') : null };
 }
 
 export async function getCurrentUser() {
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-  if (sessionError) return { user: null, error: sessionError };
+  if (sessionError) return { user: null, error: mapSupabaseError(sessionError, 'Session Check') };
   if (!session) return { user: null, error: null };
 
   const { data: { user }, error } = await supabase.auth.getUser();
-  return { user, error };
+  return { user, error: error ? mapSupabaseError(error, 'User Retrieval') : null };
 }
 
 export async function resetPasswordForEmail(email: string) {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: getRedirectUrl('/update-password'),
   });
-  return { data, error };
+  return { data, error: error ? mapSupabaseError(error, 'Password Reset') : null };
 }
 
 export async function resendConfirmationEmail(email: string) {
@@ -114,5 +116,5 @@ export async function resendConfirmationEmail(email: string) {
       emailRedirectTo: getRedirectUrl(),
     }
   });
-  return { data, error };
+  return { data, error: error ? mapSupabaseError(error, 'Resend Confirmation') : null };
 }

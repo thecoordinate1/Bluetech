@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/client';
 import type { OrderStatus } from '@/lib/types';
 import type { CustomerFromSupabase } from './customerService';
+import { mapSupabaseError } from '@/lib/errorMapping';
 
 const supabase = createClient();
 
@@ -132,7 +133,7 @@ export async function getOrdersByStoreId(
       message = `Failed to fetch orders for store ${storeId}. This often indicates an RLS policy issue on the 'orders' or 'order_items' tables, or a schema cache problem preventing the nested select. Please verify RLS policies and try refreshing the Supabase schema cache. Supabase Error: ${JSON.stringify(ordersError)}`;
     }
     console.error('[orderService.getOrdersByStoreId] Supabase fetch orders error:', message, 'Original Supabase Error:', JSON.stringify(ordersError, null, 2));
-    const errorToReturn = new Error(message);
+    const errorToReturn = mapSupabaseError(ordersError, 'Orders Retrieval');
     (errorToReturn as any).details = ordersError;
     return { data: null, count: null, error: errorToReturn };
   }
@@ -165,7 +166,7 @@ export async function createOrder(
 
   if (error) {
     console.error('[orderService.createOrder] Error calling RPC:', error);
-    return { data: null, error: new Error(error.message || 'Failed to create order via RPC.') };
+    return { data: null, error: mapSupabaseError(error, 'Order Creation') };
   }
 
   console.log('[orderService.createOrder] Successfully called RPC, new order ID:', data);
@@ -191,7 +192,7 @@ export async function getOrderById(orderId: string, storeId: string): Promise<{ 
       message = `Failed to fetch order ${orderId}. This often indicates an RLS policy issue on 'orders' or 'order_items', or a schema cache problem. Please verify RLS policies and try refreshing the Supabase schema cache. Supabase Error: ${JSON.stringify(orderError)}`;
     }
     console.error('[orderService.getOrderById] Supabase fetch order error:', message, 'Original Supabase Error:', JSON.stringify(orderError, null, 2));
-    const errorToReturn = new Error(message);
+    const errorToReturn = mapSupabaseError(orderError, 'Order Retrieval');
     (errorToReturn as any).details = orderError;
     return { data: null, error: errorToReturn };
   }
@@ -233,7 +234,7 @@ export async function updateOrderStatus(
 
     if (fetchError) {
       console.error("Error fetching order for verification:", fetchError);
-      return { data: null, error: new Error("Failed to verify order details.") };
+      return { data: null, error: mapSupabaseError(fetchError, 'Order Verification') };
     }
 
     if (currentOrder?.delivery_type === 'self_delivery') {
@@ -279,7 +280,7 @@ export async function updateOrderStatus(
           if (stockUpdateError) {
             console.error(`[orderService.updateOrderStatus] Error decrementing stock for product ${item.product_id}:`, stockUpdateError);
             // In a real-world scenario, you might want to halt or rollback here
-            return { data: null, error: new Error(`Failed to update stock for product ${item.product_id}.`) };
+            return { data: null, error: mapSupabaseError(stockUpdateError, 'Stock Update') };
           }
         }
       }
@@ -309,7 +310,7 @@ export async function updateOrderStatus(
       message = 'Failed to retrieve order after status update. This strongly suggests an RLS SELECT policy on the `orders` table is missing or incorrect.';
     }
     console.error('[orderService.updateOrderStatus] Error updating order status. Message:', message, "Original Supabase Error:", JSON.stringify(updateError, null, 2));
-    const errorToReturn = new Error(message);
+    const errorToReturn = mapSupabaseError(updateError || {}, 'Order Status Update');
     (errorToReturn as any).details = updateError;
     return { data: null, error: errorToReturn };
   }
@@ -343,7 +344,7 @@ export async function getOrdersByStoreIdAndStatus(
       message = `Failed to fetch orders for store ${storeId} with status ${status}. This often indicates an RLS policy issue or schema cache problem. Supabase Error: ${JSON.stringify(ordersError)}`;
     }
     console.error(`[orderService.getOrdersByStoreIdAndStatus] Supabase fetch error (status: ${status}):`, message, 'Original Supabase Error:', JSON.stringify(ordersError, null, 2));
-    const errorToReturn = new Error(message);
+    const errorToReturn = mapSupabaseError(ordersError, `Orders Retrieval (${status})`);
     (errorToReturn as any).details = ordersError;
     return { data: null, count: null, error: errorToReturn };
   }
@@ -383,7 +384,7 @@ export async function getOrdersByCustomerAndStore(
       message = `Failed to fetch orders for customer ${customerId} in store ${storeId}. This often indicates an RLS policy issue or schema cache problem. Supabase Error: ${JSON.stringify(ordersError)}`;
     }
     console.error(`[orderService.getOrdersByCustomerAndStore] Supabase fetch error:`, message, 'Original Supabase Error:', JSON.stringify(ordersError, null, 2));
-    const errorToReturn = new Error(message);
+    const errorToReturn = mapSupabaseError(ordersError, 'Customer Orders Retrieval');
     (errorToReturn as any).details = ordersError;
     return { data: null, error: errorToReturn };
   }
@@ -417,7 +418,7 @@ export async function getStoreOrderStats(storeId: string): Promise<{ data: Store
 
   if (fetchError) {
     console.error(`[orderService.getStoreOrderStats] Error fetching orders for store ${storeId}:`, fetchError.message);
-    return { data: null, error: new Error(fetchError.message) };
+    return { data: null, error: mapSupabaseError(fetchError, 'Order Stats Retrieval') };
   }
 
   if (!orders) {
@@ -469,7 +470,7 @@ export async function getStoreTotalProductsSold(storeId: string): Promise<{ data
       detailedErrorMessage = `RPC Error: ${error.message}. The 'authenticated' role (or the role your user is using) lacks EXECUTE permission on the 'get_total_products_sold_for_store' function. Please grant permission using: GRANT EXECUTE ON FUNCTION get_total_products_sold_for_store(UUID) TO authenticated;`;
     }
     console.error(`[orderService.getStoreTotalProductsSold] Error calling RPC for store ${storeId}:`, detailedErrorMessage, 'Original Supabase Error:', JSON.stringify(error, null, 2));
-    return { data: null, error: new Error(detailedErrorMessage) };
+    return { data: null, error: mapSupabaseError(error, 'Products Sold Count Retrieval') };
   }
 
   const totalSold = typeof data === 'number' ? data : 0;
@@ -498,7 +499,7 @@ export async function getMonthlySalesOverviewForStore(
 
   if (error) {
     console.error('[orderService.getMonthlySalesOverviewForStore] Error calling RPC:', error);
-    return { data: null, error: new Error(error.message || 'Failed to fetch monthly sales overview from RPC.') };
+    return { data: null, error: mapSupabaseError(error, 'Monthly Sales Overview Retrieval') };
   }
 
   console.log('[orderService.getMonthlySalesOverviewForStore] Data from RPC:', data);
@@ -523,7 +524,7 @@ export async function getSelfDeliveryOrdersForStore(
   if (ordersError) {
     let message = ordersError.message || 'Failed to fetch self-delivery orders.';
     console.error('[orderService.getSelfDeliveryOrdersForStore] Supabase fetch error:', message, 'Original Supabase Error:', JSON.stringify(ordersError, null, 2));
-    const errorToReturn = new Error(message);
+    const errorToReturn = mapSupabaseError(ordersError, 'Self-Delivery Orders Retrieval');
     (errorToReturn as any).details = ordersError;
     return { data: null, error: errorToReturn };
   }
@@ -552,7 +553,7 @@ export async function getSelfDeliveryOrdersForVendor(
   if (ordersError) {
     let message = ordersError.message || 'Failed to fetch self-delivery orders for vendor.';
     console.error('[orderService.getSelfDeliveryOrdersForVendor] Supabase fetch error:', message, 'Original Supabase Error:', JSON.stringify(ordersError, null, 2));
-    const errorToReturn = new Error(message);
+    const errorToReturn = mapSupabaseError(ordersError, 'Vendor Self-Delivery Orders Retrieval');
     (errorToReturn as any).details = ordersError;
     return { data: null, error: errorToReturn };
   }
@@ -580,7 +581,7 @@ export async function getConfirmedOrdersByDeliveryTier(
   if (ordersError) {
     let message = ordersError.message || `Failed to fetch ${deliveryTier} orders.`;
     console.error(`[orderService.getConfirmedOrdersByDeliveryTier] Supabase fetch error:`, message, 'Original Supabase Error:', JSON.stringify(ordersError, null, 2));
-    const errorToReturn = new Error(message);
+    const errorToReturn = mapSupabaseError(ordersError, `${deliveryTier} Orders Retrieval`);
     (errorToReturn as any).details = ordersError;
     return { data: null, error: errorToReturn };
   }

@@ -114,7 +114,7 @@ export default function PrivacyPolicyPage() {
                 <h2 className="text-2xl font-bold mb-4">7. Contact Us</h2>
                 <div className="bg-muted p-6 rounded-lg">
                   <p className="mb-2">If you have questions or comments about this Privacy Policy, please contact us at:</p>
-                  <a href="mailto:privacy@entemba.shop" className="text-primary font-semibold hover:underline">privacy@entemba.shop</a>
+                  <a href="mailto:support@entemba.shop" className="text-primary font-semibold hover:underline">support@entemba.shop</a>
                 </div>
               </section>
             </div>

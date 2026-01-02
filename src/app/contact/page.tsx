@@ -88,7 +88,7 @@ export default function ContactPage() {
                                     <div>
                                         <h3 className="font-semibold text-lg">Email Us</h3>
                                         <p className="text-muted-foreground">Our friendly team is here to help.</p>
-                                        <a href="mailto:support@entemba.com" className="text-primary hover:underline font-medium block mt-1">support@entemba.com</a>
+                                        <a href="mailto:support@entemba.shop" className="text-primary hover:underline font-medium block mt-1">support@entemba.shop</a>
                                     </div>
                                 </div>
                                 <div className="flex items-start space-x-4">

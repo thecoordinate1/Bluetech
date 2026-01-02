@@ -2,7 +2,8 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, CheckCircle2, BarChart3, ShoppingBag, Globe, ShieldCheck, Zap, Twitter, Facebook, Instagram, Linkedin, Github } from "lucide-react";
+import { ArrowRight, CheckCircle2, BarChart3, ShoppingBag, Globe, ShieldCheck, Zap, Twitter, Facebook, Instagram, Linkedin, Github, Package } from "lucide-react";
+import { NewsletterForm } from "@/components/NewsletterForm";
 
 export default function HomePage() {
   return (
@@ -129,6 +130,11 @@ export default function HomePage() {
                 title="Inventory Sync"
                 description="Automatically track stock levels across all your sales channels. Prevent overselling and stockouts."
               />
+              <FeatureCard
+                icon={<Package className="h-10 w-10 text-orange-500" />}
+                title="Dropshipping"
+                description="Source products from suppliers and sell them in your store without holding inventory. Automated fulfillment included."
+              />
             </div>
           </div>
         </section>
@@ -152,67 +158,79 @@ export default function HomePage() {
                 </Button>
               </div>
               <p className="text-sm text-muted-foreground pt-4">
-                Free 14-day trial on Pro plans • Cancel anytime
+                Free 30-day trial on Pro plans • Cancel anytime
               </p>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="py-12 border-t border-border/50 bg-muted/10">
+      <footer className="py-16 border-t border-border/50 bg-slate-950 text-slate-200">
         <div className="container px-4 md:px-6">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div className="space-y-4">
-              <h4 className="text-lg font-bold flex items-center gap-2">
-                <div className="h-6 w-6 rounded-md bg-primary" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+            <div className="lg:col-span-2 space-y-6">
+              <Link href="/" className="font-bold text-2xl flex items-center gap-2 text-white">
+                <div className="h-8 w-8 rounded-lg bg-primary" />
                 E-Ntemba
-              </h4>
-              <p className="text-sm text-muted-foreground">
-                Empowering local vendors with world-class e-commerce tools.
+              </Link>
+              <p className="text-slate-400 max-w-sm leading-relaxed">
+                Empowering local vendors with world-class e-commerce tools. Build, manage, and scale your business with ease.
               </p>
-              <Link href="https://twitter.com/entemba.shop" className="text-muted-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </Link>
-              <Link href="https://facebook.com/entemba.shop" className="text-muted-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
-                <Facebook className="h-5 w-5" />
-                <span className="sr-only">Facebook</span>
-              </Link>
-              <Link href="https://instagram.com/entemba.shop" className="text-muted-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
-                <Instagram className="h-5 w-5" />
-                <span className="sr-only">Instagram</span>
-              </Link>
-              <Link href="https://linkedin.com/company/entemba.shop" className="text-muted-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
-                <Linkedin className="h-5 w-5" />
-                <span className="sr-only">LinkedIn</span>
-              </Link>
+              <div className="flex gap-4">
+                <Link href="https://twitter.com/entemba.shop" className="bg-slate-900 p-2 rounded-full hover:bg-primary hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">
+                  <Twitter className="h-5 w-5" />
+                  <span className="sr-only">Twitter</span>
+                </Link>
+                <Link href="https://facebook.com/entemba.shop" className="bg-slate-900 p-2 rounded-full hover:bg-primary hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">
+                  <Facebook className="h-5 w-5" />
+                  <span className="sr-only">Facebook</span>
+                </Link>
+                <Link href="https://instagram.com/entemba.shop" className="bg-slate-900 p-2 rounded-full hover:bg-primary hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">
+                  <Instagram className="h-5 w-5" />
+                  <span className="sr-only">Instagram</span>
+                </Link>
+                <Link href="https://linkedin.com/company/entemba.shop" className="bg-slate-900 p-2 rounded-full hover:bg-primary hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">
+                  <Linkedin className="h-5 w-5" />
+                  <span className="sr-only">LinkedIn</span>
+                </Link>
+              </div>
             </div>
+
             <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h4 className="font-semibold text-white mb-6">Product</h4>
+              <ul className="space-y-4 text-sm text-slate-400">
                 <li><Link href="/features" className="hover:text-primary transition-colors">Features</Link></li>
                 <li><Link href="/pricing" className="hover:text-primary transition-colors">Pricing</Link></li>
                 <li><Link href="/showcase" className="hover:text-primary transition-colors">Showcase</Link></li>
+
               </ul>
             </div>
+
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h4 className="font-semibold text-white mb-6">Company</h4>
+              <ul className="space-y-4 text-sm text-slate-400">
                 <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
                 <li><Link href="/careers" className="hover:text-primary transition-colors">Careers</Link></li>
                 <li><Link href="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
+                <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
               </ul>
             </div>
+
             <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-              </ul>
+              <h4 className="font-semibold text-white mb-6">Stay Updated</h4>
+              <p className="text-sm text-slate-400 mb-4">Subscribe to our newsletter for the latest updates.</p>
+              <NewsletterForm />
             </div>
           </div>
-          <div className="border-t border-border/50 pt-8 text-center text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} E-Ntemba. All rights reserved.
+
+          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+            <div>
+              &copy; {new Date().getFullYear()} E-Ntemba. All rights reserved.
+            </div>
+            <div className="flex gap-6">
+              <Link href="/privacy" className="hover:text-slate-300 transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-slate-300 transition-colors">Terms of Service</Link>
+            </div>
           </div>
         </div>
       </footer>

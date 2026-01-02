@@ -2,6 +2,7 @@
 // src/services/storeService.ts
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
+import { mapSupabaseError } from '@/lib/errorMapping';
 
 const supabase = createClient();
 
@@ -158,7 +159,7 @@ export async function getStoresByUserId(userId: string): Promise<{ data: StoreFr
 
   if (storesError) {
     console.error('[storeService.getStoresByUserId] Supabase fetch stores error:', storesError);
-    return { data: null, error: new Error(storesError.message || 'Failed to fetch stores.') };
+    return { data: null, error: mapSupabaseError(storesError, 'Stores Retrieval') };
   }
 
   if (!storesData) {
@@ -199,16 +200,8 @@ export async function getStoreById(storeId: string, userId: string): Promise<{ d
     .single();
 
   if (storeError) {
-    let message = `Failed to fetch store ${storeId}.`;
-    if (storeError.message && typeof storeError.message === 'string' && storeError.message.trim() !== '') {
-      message = storeError.message;
-    } else if (Object.keys(storeError).length === 0) { // Check if error object is empty
-      message = `Error fetching store ${storeId}. This strongly indicates an RLS SELECT policy issue on the 'stores' table preventing access, or the store does not exist/match vendor_id. Please verify RLS.`;
-    } else {
-      message = `Supabase error fetching store ${storeId}. Details: ${JSON.stringify(storeError)}`;
-    }
-    console.error(`[storeService.getStoreById] Error fetching store ${storeId}:`, message, 'Original Supabase Error:', JSON.stringify(storeError, null, 2));
-    return { data: null, error: new Error(message) };
+    console.error(`[storeService.getStoreById] Error fetching store ${storeId}:`, storeError);
+    return { data: null, error: mapSupabaseError(storeError, 'Store Retrieval') };
   }
 
   if (!storeData) {
@@ -274,26 +267,8 @@ export async function createStore(
   console.log("[storeService.createStore] Supabase insert response:", { newStore: JSON.stringify(newStore), createStoreError: JSON.stringify(createStoreError, null, 2) });
 
   if (createStoreError || !newStore) {
-    let message = 'Failed to create store record.';
-    let details: any = createStoreError;
-
-    if (createStoreError) {
-      if (createStoreError.message && typeof createStoreError.message === 'string' && createStoreError.message.trim() !== '') {
-        message = createStoreError.message;
-      } else if (Object.keys(createStoreError).length === 0) {
-        message = 'Store creation failed. This likely indicates a Row Level Security policy is preventing the operation or the read-back of the inserted row. Ensure RLS INSERT and SELECT policies for `vendor_id = auth.uid()` exist on `stores` table.';
-        details = { reason: "RLS or data constraint issue, empty error object from Supabase", supabaseError: createStoreError };
-      } else {
-        message = `Supabase error during store insert. Details: ${JSON.stringify(createStoreError)}`;
-      }
-    } else if (!newStore) { // createStoreError is null/undefined but newStore is also null
-      message = 'Failed to create store record or retrieve it after insert. This strongly suggests an RLS SELECT policy on the `stores` table (e.g., `vendor_id = auth.uid()`) is missing or incorrect, preventing read-back of the newly inserted row.';
-      details = { reason: "Failed to retrieve after insert, likely RLS SELECT policy missing/incorrect" };
-    }
-    console.error('[storeService.createStore] Error creating store. Message:', message, "Original Supabase Error:", JSON.stringify(createStoreError, null, 2) || 'No specific Supabase error object returned.');
-    const errorToReturn = new Error(message);
-    (errorToReturn as any).details = details;
-    return { data: null, error: errorToReturn };
+    console.error('[storeService.createStore] Error creating store:', createStoreError);
+    return { data: null, error: mapSupabaseError(createStoreError || {}, 'Store Creation') };
   }
 
   let currentStoreData = { ...newStore, social_links: [] } as StoreFromSupabase;
@@ -430,22 +405,8 @@ export async function updateStore(
     .single();
 
   if (updateStoreError || !updatedStoreCore) {
-    let message = 'Failed to update store details.';
-    if (updateStoreError) {
-      if (updateStoreError.message && typeof updateStoreError.message === 'string' && updateStoreError.message.trim() !== '') {
-        message = updateStoreError.message;
-      } else if (Object.keys(updateStoreError).length === 0) {
-        message = `Store update failed (empty error object). This strongly suggests an RLS policy issue on the 'stores' table preventing update or read-back. Store ID: ${storeId}`;
-      } else {
-        message = `Supabase error during store update. Store ID: ${storeId}. Details: ${JSON.stringify(updateStoreError)}`;
-      }
-    } else if (!updatedStoreCore) {
-      message = `Failed to update store or retrieve it after update (no data returned). Ensure store exists, RLS allows operation for this vendor, and you have SELECT permissions. Store ID: ${storeId}`;
-    }
-    console.error('[storeService.updateStore] Error updating store details. Message:', message, 'Original Supabase Error:', JSON.stringify(updateStoreError, null, 2));
-    const errorToReturn = new Error(message);
-    (errorToReturn as any).details = updateStoreError;
-    return { data: null, error: errorToReturn };
+    console.error('[storeService.updateStore] Error updating store:', updateStoreError);
+    return { data: null, error: mapSupabaseError(updateStoreError || {}, 'Store Update') };
   }
 
   console.log(`[storeService.updateStore] Store ${storeId} details updated. Managing social links.`);

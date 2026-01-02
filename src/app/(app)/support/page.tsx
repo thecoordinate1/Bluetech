@@ -125,7 +125,7 @@ export default function SupportPage() {
                             <h3 className="font-semibold">Email Us</h3>
                             <p className="text-xs text-muted-foreground">For detailed inquiries</p>
                         </div>
-                        <Button variant="outline" size="sm" className="w-full mt-2">support@entemba.com</Button>
+                        <Button variant="outline" size="sm" className="w-full mt-2">support@entemba.shop</Button>
                     </CardContent>
                 </Card>
                 <Card className="shadow-sm hover:shadow-md transition-shadow">

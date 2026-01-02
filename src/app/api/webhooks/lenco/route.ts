@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     console.log('[Webhook] Received Lenco event:', JSON.stringify(body, null, 2));
 
     // --- Signature Verification ---
-    const secret = process.env.LENCO_LIVE_SECRET_KEY;
+    const secret = process.env.LENCO_WEBHOOK_SECRET;
     const signature = request.headers.get('x-lenco-signature') || request.headers.get('x-webhook-signature');
 
     if (secret && signature) {

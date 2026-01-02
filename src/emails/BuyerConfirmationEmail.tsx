@@ -46,7 +46,7 @@ export const BuyerConfirmationEmail = ({
                     </Section>
 
                     <Button
-                        href={`https://entemba.com/orders/${orderId}`}
+                        href={`https://entemba.shop/orders/${orderId}`}
                         style={button}
                     >
                         Track Order

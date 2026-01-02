@@ -51,7 +51,7 @@ export const NewOrderEmail = ({
                     </Section>
 
                     <Button
-                        href={`https://entemba.com/vendor/orders/${orderId}`}
+                        href={`https://entemba.shop/vendor/orders/${orderId}`}
                         style={button}
                     >
                         View Order Details

@@ -141,18 +141,7 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* Left Side - Visuals */}
-      <div className="relative hidden lg:flex flex-col justify-between p-10 bg-muted text-white overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/signup-bg.png"
-            alt="Background"
-            fill
-            className="object-cover opacity-90 scale-105 animate-pulse-primary"
-            style={{ animationDuration: '20s' }}
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
-        </div>
+      <div className="relative hidden lg:flex flex-col justify-between p-10 bg-slate-950 text-white overflow-hidden">
 
         <div className="relative z-10 flex items-center gap-2 text-2xl font-bold animate-slide-in-from-left">
           <div className="bg-white/10 p-2 rounded-xl backdrop-blur-md border border-white/10 shadow-lg">

@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, CheckCircle2, Zap, BarChart3, Globe, ShieldCheck, ShoppingBag, Truck, Smartphone, Layers, Users } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Zap, BarChart3, Globe, ShieldCheck, ShoppingBag, Truck, Smartphone, Layers, Users, Package } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -85,6 +85,11 @@ export default function FeaturesPage() {
                             title="Mobile Management"
                             description="Run your entire business from your phone with our fully responsive mobile app."
                         />
+                        <FeatureCard
+                            icon={<Package className="h-8 w-8 text-pink-500" />}
+                            title="Dropshipping"
+                            description="Source products from suppliers and sell them in your store without holding inventory. Automated fulfillment included."
+                        />
                     </div>
                 </div>
             </section>
@@ -160,17 +165,23 @@ export default function FeaturesPage() {
                         </div>
                         <div className="relative rounded-xl overflow-hidden border border-border/50 shadow-2xl bg-card p-8 flex items-center justify-center min-h-[400px]">
                             <div className="grid grid-cols-2 gap-6 w-full max-w-sm">
-                                <div className="bg-background p-6 rounded-lg shadow-sm border border-border flex items-center justify-center h-24">
-                                    <span className="font-bold text-xl text-muted-foreground">Stripe</span>
+                                <div className="bg-background p-4 rounded-lg shadow-sm border border-border flex items-center justify-center h-24 text-center">
+                                    <span className="font-bold text-lg text-muted-foreground">paBondi</span>
                                 </div>
-                                <div className="bg-background p-6 rounded-lg shadow-sm border border-border flex items-center justify-center h-24">
-                                    <span className="font-bold text-xl text-muted-foreground">PayPal</span>
+                                <div className="bg-background p-4 rounded-lg shadow-sm border border-border flex items-center justify-center h-24 text-center">
+                                    <span className="font-bold text-lg text-muted-foreground">Njila</span>
                                 </div>
-                                <div className="bg-background p-6 rounded-lg shadow-sm border border-border flex items-center justify-center h-24">
-                                    <span className="font-bold text-xl text-muted-foreground">DHL</span>
+                                <div className="bg-background p-4 rounded-lg shadow-sm border border-border flex items-center justify-center h-24 text-center">
+                                    <span className="font-bold text-lg text-muted-foreground">AirtelMoney</span>
                                 </div>
-                                <div className="bg-background p-6 rounded-lg shadow-sm border border-border flex items-center justify-center h-24">
-                                    <span className="font-bold text-xl text-muted-foreground">Slack</span>
+                                <div className="bg-background p-4 rounded-lg shadow-sm border border-border flex items-center justify-center h-24 text-center">
+                                    <span className="font-bold text-lg text-muted-foreground">MoMo</span>
+                                </div>
+                                <div className="bg-background p-4 rounded-lg shadow-sm border border-border flex items-center justify-center h-24 text-center">
+                                    <span className="font-bold text-lg text-muted-foreground">ZamtelKwacha</span>
+                                </div>
+                                <div className="bg-background p-4 rounded-lg shadow-sm border border-border flex items-center justify-center h-24 text-center">
+                                    <span className="font-bold text-lg text-muted-foreground">Yango</span>
                                 </div>
                             </div>
                         </div>

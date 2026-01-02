@@ -43,26 +43,27 @@ export default function PricingPage() {
                         Start for free, upgrade as you grow. No hidden fees.
                     </p>
 
-                    <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                         {/* Starter Plan */}
                         <PricingCard
                             title="Starter"
-                            price="Free"
+                            price="K150"
+                            period="/mo"
                             description="Perfect for new vendors just getting started."
                             features={[
                                 "1 Store",
                                 "Up to 50 Products",
                                 "Basic Analytics",
                                 "Standard Support",
-                                "2.9% + 30¢ transaction fee"
+                                "2.9% + K10 transaction fee"
                             ]}
-                            cta="Start for Free"
+                            cta="Start 30-Day Trial"
                             ctaLink="/signup"
                         />
                         {/* Growth Plan */}
                         <PricingCard
                             title="Growth"
-                            price="$29"
+                            price="K1,000"
                             period="/mo"
                             description="For growing businesses needing more power."
                             features={[
@@ -74,13 +75,13 @@ export default function PricingPage() {
                                 "Custom Domain Support"
                             ]}
                             isPopular={true}
-                            cta="Start 14-Day Trial"
+                            cta="Start 30-Day Trial"
                             ctaLink="/signup?plan=growth"
                         />
                         {/* Pro Plan */}
                         <PricingCard
                             title="Pro"
-                            price="$79"
+                            price="K2,800"
                             period="/mo"
                             description="For high-volume sellers and scaling teams."
                             features={[
@@ -92,8 +93,26 @@ export default function PricingPage() {
                                 "API Access",
                                 "Team Roles & Permissions"
                             ]}
-                            cta="Start 14-Day Trial"
+                            cta="Start 30-Day Trial"
                             ctaLink="/signup?plan=pro"
+                        />
+                        {/* Supplier Plan */}
+                        <PricingCard
+                            title="Supplier"
+                            price="K5,000"
+                            period="/mo"
+                            description="For manufacturers and large wholesalers."
+                            features={[
+                                "Unlimited Inventory",
+                                "Access to All Vendors",
+                                "Verified Badge",
+                                "Logistics Coordination",
+                                "Priority Payouts",
+                                "Dedicated Account Manager",
+                                "Bulk Imports"
+                            ]}
+                            cta="Become a Supplier"
+                            ctaLink="/supplier"
                         />
                     </div>
                 </div>
@@ -110,7 +129,7 @@ export default function PricingPage() {
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-semibold">Is there a free trial?</h3>
-                            <p className="text-muted-foreground">We offer a 14-day free trial for our Growth and Pro plans. No credit card required to start.</p>
+                            <p className="text-muted-foreground">We offer a 30-day free trial for all plans. No credit card required to start.</p>
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-semibold">What payment methods do you accept?</h3>

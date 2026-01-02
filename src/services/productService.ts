@@ -1,6 +1,7 @@
 // src/services/productService.ts
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
+import { mapSupabaseError } from '@/lib/errorMapping';
 
 const supabase = createClient();
 
@@ -128,8 +129,7 @@ async function uploadProductImage(
 
   if (uploadError) {
     console.error('[productService.uploadProductImage] Raw Supabase upload error object:', JSON.stringify(uploadError, null, 2));
-    const message = uploadError.message || 'Failed to upload product image. Check RLS policies on the "product-images" bucket.';
-    const errorToReturn = new Error(message);
+    const errorToReturn = mapSupabaseError(uploadError, 'Product Image Upload');
     (errorToReturn as any).details = uploadError;
     return { publicUrl: null, error: errorToReturn };
   }
@@ -168,7 +168,7 @@ export async function getProductsByStoreId(
 
   if (productsError) {
     console.error('[productService.getProductsByStoreId] Supabase fetch products error:', productsError);
-    return { data: null, count: null, error: new Error(productsError.message || 'Failed to fetch products.') };
+    return { data: null, count: null, error: mapSupabaseError(productsError, 'Products Retrieval') };
   }
 
   if (productsData) {
@@ -198,8 +198,7 @@ export async function getProductById(productId: string): Promise<{ data: Product
 
   if (productError) {
     console.error(`[productService.getProductById] Supabase fetch product error for ID ${productId}:`, JSON.stringify(productError, null, 2));
-    const msg = productError.message || (productError.code ? `Supabase Error Code: ${productError.code}` : `Unknown error fetching product with ID ${productId}`);
-    return { data: null, error: new Error(msg) };
+    return { data: null, error: mapSupabaseError(productError, 'Product Retrieval') };
   }
 
   if (productData) {
@@ -232,7 +231,7 @@ export async function createProduct(
 
   if (createError || !newProduct) {
     console.error('[productService.createProduct] Error creating product record:', createError);
-    return { data: null, error: new Error(createError?.message || 'Failed to create product.') };
+    return { data: null, error: mapSupabaseError(createError || {}, 'Product Creation') };
   }
 
   if (images.length > 0) {
@@ -288,7 +287,7 @@ export async function updateProduct(
 
   if (updateError || !updatedProduct) {
     console.error(`[productService.updateProduct] Error updating product ${productId}:`, updateError);
-    return { data: null, error: new Error(updateError?.message || `Failed to update product.`) };
+    return { data: null, error: mapSupabaseError(updateError || {}, 'Product Update') };
   }
 
   const existingImages = updatedProduct.product_images || [];
@@ -359,7 +358,7 @@ export async function deleteProduct(
 
   if (updateError) {
     console.error(`[productService.deleteProduct] Error soft-deleting product ${productId}:`, updateError);
-    return { error: new Error(updateError.message || 'Failed to archive product.') };
+    return { error: mapSupabaseError(updateError, 'Product Deletion') };
   }
 
   console.log(`[productService.deleteProduct] Product ${productId} successfully archived.`);
@@ -386,7 +385,7 @@ export async function getStoreTopSellingProductsRPC(
 
   if (error) {
     console.error('[productService.getStoreTopSellingProductsRPC] Error calling RPC:', JSON.stringify(error, null, 2));
-    return { data: null, error: new Error(error.message || 'Failed to fetch top selling products from RPC.') };
+    return { data: null, error: mapSupabaseError(error, 'Top Selling Products Retrieval') };
   }
 
   console.log('[productService.getStoreTopSellingProductsRPC] Data from RPC:', data);
@@ -435,7 +434,7 @@ export async function getDropshippableProducts(currentUserStoreId?: string): Pro
   const { data, error } = await query;
   if (error) {
     console.error("[productService.getDropshippableProducts] Error:", error);
-    return { data: null, error: new Error(error.message) };
+    return { data: null, error: mapSupabaseError(error, 'Dropshippable Products Retrieval') };
   }
   return { data: data as unknown as ProductFromSupabase[], error: null };
 }
@@ -453,7 +452,7 @@ export async function getMarketProductById(productId: string): Promise<{ data: P
 
   if (error) {
     console.error(`[productService.getMarketProductById] Error fetching product ${productId}:`, error);
-    return { data: null, error: new Error(error.message) };
+    return { data: null, error: mapSupabaseError(error, 'Market Product Retrieval') };
   }
 
   // Sort images if present
@@ -516,7 +515,7 @@ export async function importDropshipProduct(
   const { data: newProduct, error: createError } = await createProduct(vendorId, storeId, productData, []);
 
   if (createError || !newProduct) {
-    return { data: null, error: createError };
+    return { data: null, error: mapSupabaseError(createError || {}, 'Product Import') };
   }
 
   // 4. Handle Images - Reuse URLs
@@ -559,7 +558,7 @@ export async function getStoreInventoryStats(storeId: string): Promise<{ data: I
 
   if (error) {
     console.error(`[productService.getStoreInventoryStats] Error:`, error);
-    return { data: null, error: new Error(error.message) };
+    return { data: null, error: mapSupabaseError(error, 'Inventory Stats Retrieval') };
   }
 
   const stats: InventoryStats = {

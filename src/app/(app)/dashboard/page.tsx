@@ -346,7 +346,9 @@ export default function DashboardPage() {
           salesChartRes,
           newCustomersRes,
           profitStatsRes,
-          recentOrdersRes
+          recentOrdersRes,
+          settlementRes,
+          subRes
         ] = await Promise.allSettled([
           getStoreById(storeId, authUser.id),
           getStoreOrderStats(storeId),
@@ -416,13 +418,11 @@ export default function DashboardPage() {
           setRecentOrders(recentOrdersRes.value.data);
         }
 
-        const settlementRes = results[9] as PromiseSettledResult<{ data: SettlementStats | null; error: Error | null }>;
-        if (settlementRes?.status === 'fulfilled' && !settlementRes.value.error) {
+        if (settlementRes.status === 'fulfilled' && !settlementRes.value.error) {
           setSettlementStats(settlementRes.value.data);
         }
 
-        const subRes = results[10] as PromiseSettledResult<{ data: VendorSubscription | null; error: Error | null }>;
-        if (subRes?.status === 'fulfilled' && !subRes.value.error) {
+        if (subRes.status === 'fulfilled' && !subRes.value.error) {
           setSubscription(subRes.value.data);
         }
       } catch (error) {
