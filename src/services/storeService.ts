@@ -240,6 +240,42 @@ export async function createStore(
 ): Promise<{ data: StoreFromSupabase | null, error: Error | null }> {
   console.log(`[storeService.createStore] Attempting to insert store for vendor ID: ${userId}`, { storeData, hasLogoFile: !!logoFile });
 
+  // Self-Healing: Check if vendor profile exists. If not, create it using auth metadata.
+  // This prevents FK violation (code 23503) if the signup trigger failed.
+  const { data: existingVendor } = await supabase.from('vendors').select('id').eq('id', userId).single();
+
+  if (!existingVendor) {
+    console.warn(`[storeService.createStore] Vendor profile missing for ${userId}. Attempting JIT creation.`);
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user && user.id === userId) {
+      const { error: jitError } = await supabase.from('vendors').insert({
+        id: userId,
+        email: user.email,
+        display_name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'Vendor',
+        avatar_url: user.user_metadata?.avatar_url || null,
+        // Optional fields from metadata
+        bank_name: user.user_metadata?.bank_name || null,
+        bank_account_name: user.user_metadata?.bank_account_name || null,
+        bank_account_number: user.user_metadata?.bank_account_number || null,
+        bank_branch_name: user.user_metadata?.bank_branch_name || null,
+        mobile_money_provider: user.user_metadata?.mobile_money_provider || null,
+        mobile_money_number: user.user_metadata?.mobile_money_number || null,
+        mobile_money_name: user.user_metadata?.mobile_money_name || null,
+      });
+
+      if (jitError) {
+        console.error('[storeService.createStore] Failed to create JIT vendor profile:', jitError);
+        // We continue, and the store creation will likely fail with the original FK error, 
+        // which serves as the "source of truth" error.
+      } else {
+        console.log('[storeService.createStore] Successfully created JIT vendor profile.');
+      }
+    } else {
+      console.warn('[storeService.createStore] Could not fetch auth user for JIT creation.');
+    }
+  }
+
   const initialStoreInsertData = {
     vendor_id: userId,
     name: storeData.name,
