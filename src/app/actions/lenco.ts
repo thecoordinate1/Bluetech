@@ -72,7 +72,7 @@ export async function initiateMarketImportPayment(
     const payload: MobileMoneyCollectionPayload = {
         amount: amountString,
         currency: 'ZMW',
-        provider,
+        operator: provider,
         phone,
         reference
     };

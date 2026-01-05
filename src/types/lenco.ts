@@ -1,7 +1,7 @@
 export interface MobileMoneyCollectionPayload {
     amount: string; // "100.00"
     currency: string; // "ZMW"
-    provider: 'airtel' | 'mtn' | 'zamtel';
+    operator: 'airtel' | 'mtn' | 'zamtel';
     phone: string;
     reference: string;
 }
