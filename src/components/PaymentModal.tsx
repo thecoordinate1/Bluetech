@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Phone, CheckCircle2, Import } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface PaymentModalProps {
     isOpen: boolean;
@@ -42,10 +43,50 @@ export function PaymentModal({
     const [phone, setPhone] = React.useState("");
     const [provider, setProvider] = React.useState<'airtel' | 'mtn' | 'zamtel'>('mtn');
     const [mode, setMode] = React.useState<'pay' | 'credit'>(remainingCredits > 0 ? 'credit' : 'pay');
+    const [error, setError] = React.useState<string | null>(null);
+
+    const validatePhone = (phoneNumber: string, selectedProvider: string) => {
+        // Remove spaces and non-digit characters
+        const cleanPhone = phoneNumber.replace(/\D/g, '');
+
+        // Check length (Zambia numbers are usually 10 digits starting with 0)
+        if (cleanPhone.length !== 10) {
+            return "Phone number must be 10 digits (e.g., 096xxxxxxx)";
+        }
+
+        const prefix = cleanPhone.substring(0, 3);
+
+        if (selectedProvider === 'mtn') {
+            if (!['096', '076'].includes(prefix)) return "MTN numbers must start with 096 or 076";
+        } else if (selectedProvider === 'airtel') {
+            if (!['097', '077'].includes(prefix)) return "Airtel numbers must start with 097 or 077";
+        } else if (selectedProvider === 'zamtel') {
+            if (!['095', '075'].includes(prefix)) return "Zamtel numbers must start with 095 or 075";
+        }
+
+        return null;
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const validationError = validatePhone(phone, provider);
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+        setError(null);
         onConfirm(phone, provider);
+    };
+
+    // Clear error when inputs change
+    const handlePhoneChange = (val: string) => {
+        setPhone(val);
+        if (error) setError(null);
+    };
+
+    const handleProviderChange = (val: 'airtel' | 'mtn' | 'zamtel') => {
+        setProvider(val);
+        if (error) setError(null);
     };
 
     return (
@@ -102,7 +143,7 @@ export function PaymentModal({
                                 <Label htmlFor="provider">Network Provider</Label>
                                 <Select
                                     value={provider}
-                                    onValueChange={(val: 'airtel' | 'mtn' | 'zamtel') => setProvider(val)}
+                                    onValueChange={handleProviderChange}
                                     disabled={isProcessing}
                                 >
                                     <SelectTrigger>
@@ -122,13 +163,16 @@ export function PaymentModal({
                                     <Input
                                         id="phone"
                                         placeholder="096 123 4567"
-                                        className="pl-9"
+                                        className={cn("pl-9", error && "border-destructive focus-visible:ring-destructive")}
                                         value={phone}
-                                        onChange={(e) => setPhone(e.target.value)}
+                                        onChange={(e) => handlePhoneChange(e.target.value)}
                                         required
                                         disabled={isProcessing}
                                     />
                                 </div>
+                                {error && (
+                                    <p className="text-xs text-destructive font-medium">{error}</p>
+                                )}
                             </div>
 
                         </form>
