@@ -131,7 +131,7 @@ export default function HomePage() {
             <div className="max-w-4xl mx-auto text-center space-y-8 p-12 rounded-3xl border border-primary/20 bg-background/50 backdrop-blur-lg shadow-2xl">
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Ready to transform your business?</h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Join thousands of successful vendors who trust E-Ntemba. No credit card required for the free tier.
+                Join thousands of successful vendors who trust E-Ntemba. No credit card required for the free trial.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
                 <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-xl shadow-primary/20 hover:scale-105 transition-transform" asChild>

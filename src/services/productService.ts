@@ -219,7 +219,9 @@ export async function createProduct(
   images: { file: File; order: number }[]
 ): Promise<{ data: ProductFromSupabase | null; error: Error | null }> {
   console.log('[productService.createProduct] Creating product for store_id:', storeId);
+  console.log('[productService.createProduct] Creating product for store_id:', storeId);
   const { order_price, ...productDataForDb } = productData;
+  if (productDataForDb.sku === "") productDataForDb.sku = null;
   const { data: newProduct, error: createError } = await supabase
     .from('products')
     .insert({
@@ -230,7 +232,7 @@ export async function createProduct(
     .single();
 
   if (createError || !newProduct) {
-    console.error('[productService.createProduct] Error creating product record:', createError);
+    console.error('[productService.createProduct] Error creating product record:', JSON.stringify(createError, null, 2));
     return { data: null, error: mapSupabaseError(createError || {}, 'Product Creation') };
   }
 
@@ -277,6 +279,7 @@ export async function updateProduct(
   console.log(`[productService.updateProduct] Updating product ${productId}`);
 
   const { order_price, ...productDataForDb } = productData;
+  if (productDataForDb.sku === "") productDataForDb.sku = null;
 
   const { data: updatedProduct, error: updateError } = await supabase
     .from('products')

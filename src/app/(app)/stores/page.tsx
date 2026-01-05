@@ -587,7 +587,7 @@ export default function StoresPage() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Store Management</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Store Management</h1>
           <p className="text-muted-foreground mt-1">Create and manage your digital storefronts.</p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={(open) => { setIsAddDialogOpen(open); if (!open) resetFormFields(); }}>

@@ -234,10 +234,10 @@ export default function MarketPage() {
         });
 
     return (
-        <div className="container py-8 space-y-8 animate-in fade-in duration-500 min-h-screen">
+        <div className="container py-4 md:py-8 space-y-8 animate-in fade-in duration-500 min-h-screen">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Supplier Marketplace</h1>
+                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Supplier Marketplace</h1>
                     <p className="text-muted-foreground mt-2">Discover premium products from verified dropshipping suppliers.</p>
                 </div>
                 <div className="flex items-center gap-2">

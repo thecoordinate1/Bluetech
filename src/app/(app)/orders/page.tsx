@@ -559,12 +559,12 @@ export default function OrdersPage() {
   const getInitials = (name: string) => name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
 
   return (
-    <div className="flex flex-col gap-6 p-2 sm:p-6 bg-muted/5 min-h-screen pb-20">
+    <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8 bg-muted/5 min-h-screen pb-20">
 
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Orders</h1>
           <p className="text-muted-foreground">Manage and track your customer orders.</p>
         </div>
         <div className="flex gap-2 w-full sm:w-auto">

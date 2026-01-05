@@ -30,6 +30,9 @@ export function mapSupabaseError(error: any, context: string = 'Operation'): Err
         if (error.message?.includes('name')) {
             return new Error(`A ${context.toLowerCase()} with this name already exists.`);
         }
+        if (error.message?.includes('sku')) {
+            return new Error(`A product with this SKU already exists.`);
+        }
         return new Error(`This ${context.toLowerCase()} already exists.`);
     }
 

@@ -364,49 +364,89 @@ export default function RevenueReportPage() {
               <Skeleton className="h-10 w-full" />
             </div>
           ) : topProducts && topProducts.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="hidden sm:table-cell">Image</TableHead>
-                  <TableHead>Product</TableHead>
-                  <TableHead className="text-right">Revenue</TableHead>
-                  <TableHead className="text-right hidden md:table-cell">Units Sold</TableHead>
-                  <TableHead className="text-right hidden md:table-cell">Avg. Price</TableHead>
-                  <TableHead className="text-center">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden md:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[80px]">Image</TableHead>
+                      <TableHead>Product</TableHead>
+                      <TableHead className="text-right">Revenue</TableHead>
+                      <TableHead className="text-right">Units Sold</TableHead>
+                      <TableHead className="text-right">Avg. Price</TableHead>
+                      <TableHead className="text-center w-[100px]">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {topProducts.map((product) => (
+                      <TableRow key={product.product_id} className="cursor-pointer group hover:bg-muted/50 transition-colors" onClick={() => router.push(`/products/${product.product_id}${queryParams}`)}>
+                        <TableCell>
+                          <div className="relative h-10 w-10 overflow-hidden rounded-md border shadow-sm group-hover:shadow-md transition-all">
+                            <Image
+                              src={product.primary_image_url || "https://placehold.co/40x40.png"}
+                              alt={product.product_name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-medium group-hover:text-primary transition-colors">
+                            {product.product_name}
+                          </div>
+                          <div className="text-xs text-muted-foreground">{product.product_category}</div>
+                        </TableCell>
+                        <TableCell className="text-right font-medium">ZMW {Number(product.total_revenue_generated).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</TableCell>
+                        <TableCell className="text-right text-muted-foreground">{product.units_sold.toLocaleString()}</TableCell>
+                        <TableCell className="text-right text-muted-foreground">
+                          {Number(product.units_sold) > 0 ? `ZMW ${(Number(product.total_revenue_generated) / Number(product.units_sold)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "ZMW 0.00"}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); router.push(`/products/${product.product_id}${queryParams}`); }}>
+                            <ArrowLeft className="w-4 h-4 rotate-180" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile Card List View */}
+              <div className="md:hidden space-y-3">
                 {topProducts.map((product) => (
-                  <TableRow key={product.product_id} className="cursor-pointer group hover:bg-muted/50 transition-colors" onClick={() => router.push(`/products/${product.product_id}${queryParams}`)}>
-                    <TableCell className="hidden sm:table-cell">
-                      <div className="relative h-10 w-10 overflow-hidden rounded-md border shadow-sm group-hover:shadow-md transition-all">
-                        <Image
-                          src={product.primary_image_url || "https://placehold.co/40x40.png"}
-                          alt={product.product_name}
-                          fill
-                          className="object-cover"
-                          data-ai-hint={product.primary_image_data_ai_hint || "product"}
-                        />
+                  <div
+                    key={product.product_id}
+                    className="flex items-center gap-3 p-3 rounded-xl border bg-card text-card-foreground shadow-sm active:bg-accent/50 transition-colors cursor-pointer"
+                    onClick={() => router.push(`/products/${product.product_id}${queryParams}`)}
+                  >
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border bg-muted">
+                      <Image
+                        src={product.primary_image_url || "https://placehold.co/100x100.png"}
+                        alt={product.product_name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start">
+                        <h4 className="font-medium text-sm truncate pr-2">{product.product_name}</h4>
+                        <span className="text-sm font-bold text-emerald-600 dark:text-emerald-500 whitespace-nowrap">
+                          ZMW {Number(product.total_revenue_generated).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                        </span>
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <p className="font-medium group-hover:text-primary transition-colors whitespace-nowrap sm:whitespace-normal">
-                        {product.product_name}
-                      </p>
-                      <div className="text-xs text-muted-foreground">{product.product_category}</div>
-                    </TableCell>
-                    <TableCell className="text-right">ZMW {Number(product.total_revenue_generated).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</TableCell>
-                    <TableCell className="text-right hidden md:table-cell">{product.units_sold.toLocaleString()}</TableCell>
-                    <TableCell className="text-right hidden md:table-cell">
-                      {Number(product.units_sold) > 0 ? `ZMW ${(Number(product.total_revenue_generated) / Number(product.units_sold)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "ZMW 0.00"}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); router.push(`/products/${product.product_id}${queryParams}`); }}>View</Button>
-                    </TableCell>
-                  </TableRow>
+                      <div className="flex justify-between items-end mt-1">
+                        <p className="text-xs text-muted-foreground truncate">{product.product_category}</p>
+                        <div className="text-xs text-muted-foreground">
+                          {product.units_sold} sold • {Number(product.units_sold) > 0 ? `ZMW ${(Number(product.total_revenue_generated) / Number(product.units_sold)).toFixed(0)}` : "0"}/unit
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+            </>
           ) : (
             <p className="text-sm text-muted-foreground text-center py-4">No top product data available for this period.</p>
           )}

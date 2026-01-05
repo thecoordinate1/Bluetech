@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
 import { NewOrderEmail } from '@/emails/NewOrderEmail';
 import { render } from '@react-email/components';
+import { createClient as createSupabaseAdmin } from '@supabase/supabase-js';
 
 // Initialize Supabase client
 const supabase = createClient();
@@ -86,9 +87,7 @@ export async function POST(request: NextRequest) {
         const productId = parts[2];
 
         if (status === 'successful') {
-          // Logic to finalize import or mark transaction as paid
-          // For now, we assumed optimistic UI, but this confirms it.
-          // We could create a `transaction` record here.
+          // 1. Log Transaction
           await supabase.from('transactions').insert({
             store_id: storeId,
             reference: reference,
@@ -98,6 +97,59 @@ export async function POST(request: NextRequest) {
             type: 'market_import',
             metadata: payload
           });
+
+          // 2. Auto-Import Product (Bypassing RLS with Admin Client)
+          const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+          if (serviceRoleKey) {
+            try {
+              const admin = createSupabaseAdmin(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey, {
+                auth: { autoRefreshToken: false, persistSession: false }
+              });
+
+              // Fetch Original Product
+              const { data: original } = await admin.from('products').select('*, product_images(*)').eq('id', productId).single();
+
+              if (original) {
+                const wholesalePrice = original.supplier_price || original.price;
+                const newPrice = wholesalePrice * 1.25; // 25% Markup (matching UI logic)
+
+                const { data: newProd, error: createError } = await admin.from('products').insert({
+                  store_id: storeId,
+                  name: original.name,
+                  category: original.category,
+                  price: newPrice,
+                  order_price: wholesalePrice,
+                  stock: original.stock,
+                  status: 'Draft',
+                  description: original.description,
+                  full_description: original.full_description,
+                  sku: original.sku,
+                  tags: original.tags,
+                  weight_kg: original.weight_kg,
+                  dimensions_cm: original.dimensions_cm,
+                  attributes: original.attributes,
+                  is_dropshippable: false,
+                  supplier_product_id: original.id,
+                  supplier_price: original.price
+                }).select().single();
+
+                if (newProd && !createError && original.product_images?.length > 0) {
+                  const images = original.product_images.map((img: any) => ({
+                    product_id: newProd.id,
+                    image_url: img.image_url,
+                    order: img.order
+                  }));
+                  await admin.from('product_images').insert(images);
+                }
+                console.log(`[Webhook] Auto-imported product ${productId} as ${newProd?.id}`);
+              }
+            } catch (err) {
+              console.error('[Webhook] Auto-import error:', err);
+            }
+          } else {
+            console.warn('[Webhook] Missing SUPABASE_SERVICE_ROLE_KEY. Skipping auto-import.');
+          }
+
           console.log(`[Webhook] Market import payment successful: ${reference}`);
         }
         return NextResponse.json({ message: 'Market import event processed' });

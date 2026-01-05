@@ -286,6 +286,7 @@ export default function DashboardPage() {
   const [subscription, setSubscription] = React.useState<VendorSubscription | null>(null);
 
   const [isLoading, setIsLoading] = React.useState(true);
+  const [showSalesChart, setShowSalesChart] = React.useState(true);
   const [greeting, setGreeting] = React.useState("");
 
   // Initial Auth Check
@@ -517,6 +518,9 @@ export default function DashboardPage() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <Button variant="outline" size="sm" onClick={() => setShowSalesChart(!showSalesChart)}>
+            {showSalesChart ? "Hide Graph" : "Show Graph"}
+          </Button>
           <Button variant="outline" className="gap-2" asChild>
             <Link href={`/products/new${queryParams}`}>
               <Package className="w-4 h-4" /> Add Product
@@ -568,14 +572,6 @@ export default function DashboardPage() {
         />
         <MetricCard
           title="Gross Profit"
-          value={profitStats?.ytd_gross_profit ? `ZMW ${profitStats.ytd_gross_profit.toLocaleString()}` : "ZMW 0.00"}
-          icon={LineChart}
-          description="Year-To-Date Profit"
-          ctaLink={`/reports/profit${queryParams}`}
-          ctaText="View Details"
-        />
-        <MetricCard
-          title="Gross Profit"
           value={profitStats?.ytd_gross_profit ? `ZMW ${profitStats.ytd_gross_profit.toLocaleString()}` : "Locked"}
           icon={LineChart}
           description="Year-To-Date Profit"
@@ -597,73 +593,75 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-7 lg:grid-cols-7 relative">
 
         {/* Sales Chart */}
-        <Card className="md:col-span-4 lg:col-span-4 shadow-sm border-border/60 flex flex-col overflow-hidden">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-lg">Revenue Trend</CardTitle>
-                <CardDescription>Performance over last 6 months</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="flex-1 pb-4 min-h-[250px] md:min-h-[300px] px-2 md:px-6">
-            {salesChartData.length > 0 ? (
-              <ChartContainer config={chartConfig} className="h-full w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={salesChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.5} />
-                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.4} />
-                    <XAxis
-                      dataKey="month"
-                      axisLine={false}
-                      tickLine={false}
-                      tickMargin={10}
-                      fontSize={11}
-                      stroke="hsl(var(--muted-foreground))"
-                    />
-                    <YAxis
-                      axisLine={false}
-                      tickLine={false}
-                      fontSize={11}
-                      stroke="hsl(var(--muted-foreground))"
-                      tickFormatter={(value) => `K${value}`}
-                      width={40}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="sales"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={2}
-                      fillOpacity={1}
-                      fill="url(#salesGradient)"
-                    />
-                    <ChartTooltip
-                      cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }}
-                      content={
-                        <ChartTooltipContent
-                          indicator="dot"
-                          className="bg-background/95 backdrop-blur border shadow-lg text-xs"
-                        />
-                      }
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-sm">
-                <div className="p-4 bg-muted/30 rounded-full mb-3">
-                  <LineChart className="h-6 w-6 opacity-30" />
+        {showSalesChart && (
+          <Card className="md:col-span-4 lg:col-span-4 shadow-sm border-border/60 flex flex-col overflow-hidden">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg">Revenue Trend</CardTitle>
+                  <CardDescription>Performance over last 6 months</CardDescription>
                 </div>
-                No data available yet.
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent className="flex-1 pb-4 min-h-[250px] md:min-h-[300px] px-2 md:px-6">
+              {salesChartData.length > 0 ? (
+                <ChartContainer config={chartConfig} className="h-full w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={salesChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.5} />
+                          <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.4} />
+                      <XAxis
+                        dataKey="month"
+                        axisLine={false}
+                        tickLine={false}
+                        tickMargin={10}
+                        fontSize={11}
+                        stroke="hsl(var(--muted-foreground))"
+                      />
+                      <YAxis
+                        axisLine={false}
+                        tickLine={false}
+                        fontSize={11}
+                        stroke="hsl(var(--muted-foreground))"
+                        tickFormatter={(value) => `K${value}`}
+                        width={40}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="sales"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={2}
+                        fillOpacity={1}
+                        fill="url(#salesGradient)"
+                      />
+                      <ChartTooltip
+                        cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }}
+                        content={
+                          <ChartTooltipContent
+                            indicator="dot"
+                            className="bg-background/95 backdrop-blur border shadow-lg text-xs"
+                          />
+                        }
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-sm">
+                  <div className="p-4 bg-muted/30 rounded-full mb-3">
+                    <LineChart className="h-6 w-6 opacity-30" />
+                  </div>
+                  No data available yet.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Recent Activity / Top Products split */}
         <div className="md:col-span-3 lg:col-span-3 space-y-6">

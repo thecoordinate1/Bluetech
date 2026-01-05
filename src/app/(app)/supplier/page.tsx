@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { SettlementStatusBadge } from "@/components/SettlementStatusBadge";
 import { getSettlementStats, getSettlements, type SettlementStats as SettlementStatsType } from "@/services/settlementService";
 import { getStoresByUserId } from "@/services/storeService";
+import { getProductsByStoreId } from "@/services/productService";
 import { type Settlement } from "@/lib/types";
 import {
     Table,
@@ -32,6 +33,8 @@ export default function SupplierPage() {
     const [isUpdating, setIsUpdating] = React.useState(false);
     const [settlementStats, setSettlementStats] = React.useState<SettlementStatsType | null>(null);
     const [recentSettlements, setRecentSettlements] = React.useState<Settlement[]>([]);
+    const [productsCount, setProductsCount] = React.useState<number>(0);
+    const [storeId, setStoreId] = React.useState<string | null>(null);
 
     const router = useRouter();
     const { toast } = useToast();
@@ -53,13 +56,16 @@ export default function SupplierPage() {
                 const { data: stores } = await getStoresByUserId(user.id);
                 if (stores && stores.length > 0) {
                     const mainStore = stores[0];
-                    const [statsRes, settlementsRes] = await Promise.all([
+                    setStoreId(mainStore.id);
+                    const [statsRes, settlementsRes, productsRes] = await Promise.all([
                         getSettlementStats(mainStore.id),
-                        getSettlements(mainStore.id, 1, 5) // Fetch 5 recent
+                        getSettlements(mainStore.id, 1, 5), // Fetch 5 recent
+                        getProductsByStoreId(mainStore.id, 1, 1) // Fetch just to get count
                     ]);
 
                     if (statsRes.data) setSettlementStats(statsRes.data);
                     if (settlementsRes.data) setRecentSettlements(settlementsRes.data);
+                    if (productsRes.count !== null) setProductsCount(productsRes.count);
                 }
             }
 
@@ -133,14 +139,14 @@ export default function SupplierPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="flex items-center justify-between">
-                                <span className="text-2xl font-bold">12</span>
+                                <span className="text-2xl font-bold">{productsCount}</span>
                                 <Package className="w-5 h-5 text-primary" />
                             </div>
                             <p className="text-xs text-muted-foreground mt-1">Products available for dropshipping</p>
                         </CardContent>
                         <CardFooter>
                             <Button variant="outline" className="w-full text-xs" asChild>
-                                <Link href="/products?filter=dropship">Manage Inventory</Link>
+                                <Link href={`/products?storeId=${storeId}&filter=dropship`}>Manage Inventory</Link>
                             </Button>
                         </CardFooter>
                     </Card>
@@ -223,7 +229,7 @@ export default function SupplierPage() {
                         Add more products to your dropshipping catalog to reach more vendors and increase your sales volume without extra marketing.
                     </p>
                     <Button asChild>
-                        <Link href="/products/new">Add New Product</Link>
+                        <Link href={`/products/new?storeId=${storeId}`}>Add New Product</Link>
                     </Button>
                 </div>
             </div>
@@ -272,7 +278,7 @@ export default function SupplierPage() {
 
                 <Card className="border-2 shadow-xl border-primary/10 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-3 bg-primary text-primary-foreground text-xs font-bold rounded-bl-xl">
-                        BETA ACCESS
+                        LIMITED ACCESS
                     </div>
                     <CardHeader className="text-center pb-2">
                         <CardTitle className="text-2xl">Supplier Account</CardTitle>
@@ -280,7 +286,7 @@ export default function SupplierPage() {
                     </CardHeader>
                     <CardContent className="space-y-4 pt-6">
                         <div className="text-center p-4 bg-muted rounded-lg">
-                            <p className="text-sm font-medium">Zero monthly fees for early adopters</p>
+                            <p className="text-sm font-medium">1 Month Free Trial</p>
                         </div>
                         <Button
                             size="lg"
