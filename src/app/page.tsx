@@ -43,50 +43,6 @@ export default function HomePage() {
                 </Button>
               </div>
 
-              {/* Dashboard Preview */}
-              <div className="mt-16 relative w-full max-w-5xl mx-auto animate-slide-in-from-bottom delay-300 perspective-1000">
-                <div className="relative rounded-xl border border-border/50 bg-card/50 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden transform rotate-x-12 transition-transform duration-700 hover:rotate-x-0 hover:scale-[1.02]">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-purple-500/5 pointer-events-none" />
-                  <Image
-                    src="/dashboard-hero-v2.png"
-                    alt="E-Ntemba Dashboard Interface"
-                    width={1600}
-                    height={900}
-                    className="w-full h-auto object-cover"
-                    priority
-                    unoptimized
-                  />
-                </div>
-                {/* Decorative elements behind the dashboard */}
-                <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-b from-primary/10 to-transparent blur-3xl -rotate-6 rounded-[3rem]" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Social Proof / Stats */}
-        <section className="py-12 border-y border-border/50 bg-muted/20">
-          <div className="container px-4 md:px-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold tracking-tight">Our Targets</h2>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              <div className="space-y-2">
-                <h3 className="text-3xl font-bold text-foreground">1k+</h3>
-                <p className="text-sm text-muted-foreground uppercase tracking-wider">Active Vendors</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-3xl font-bold text-foreground">K100M+</h3>
-                <p className="text-sm text-muted-foreground uppercase tracking-wider">Revenue Processed</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-3xl font-bold text-foreground">99.9%</h3>
-                <p className="text-sm text-muted-foreground uppercase tracking-wider">Uptime</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-3xl font-bold text-foreground">24/7</h3>
-                <p className="text-sm text-muted-foreground uppercase tracking-wider">Support</p>
-              </div>
             </div>
           </div>
         </section>
@@ -135,6 +91,33 @@ export default function HomePage() {
                 title="Dropshipping"
                 description="Source products from suppliers and sell them in your store without holding inventory. Automated fulfillment included."
               />
+            </div>
+          </div>
+        </section>
+
+        {/* Social Proof / Stats */}
+        <section className="py-12 border-y border-border/50 bg-muted/20">
+          <div className="container px-4 md:px-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold tracking-tight">Our Targets</h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              <div className="space-y-2">
+                <h3 className="text-3xl font-bold text-foreground">1k+</h3>
+                <p className="text-sm text-muted-foreground uppercase tracking-wider">Active Vendors</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-3xl font-bold text-foreground">K100M+</h3>
+                <p className="text-sm text-muted-foreground uppercase tracking-wider">Revenue Processed</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-3xl font-bold text-foreground">99.9%</h3>
+                <p className="text-sm text-muted-foreground uppercase tracking-wider">Uptime</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-3xl font-bold text-foreground">24/7</h3>
+                <p className="text-sm text-muted-foreground uppercase tracking-wider">Support</p>
+              </div>
             </div>
           </div>
         </section>
@@ -234,7 +217,7 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }
 

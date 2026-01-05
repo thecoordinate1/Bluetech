@@ -1,6 +1,6 @@
-import type { LucideIcon } from "lucide-react";
+import { RefreshCw, PackageCheck, PersonStanding, Truck, CheckCircle, XCircle, type LucideIcon } from "lucide-react";
 
-export type OrderStatus = "Pending" | "Confirmed" | "Driver Picking Up" | "Delivering" | "Delivered" | "Cancelled";
+export type OrderStatus = "Pending" | "Confirmed" | "Driver Picking Up" | "Delivering" | "Delivered" | "Cancelled" | "Shipped";
 export type CustomerStatus = 'Active' | 'Inactive' | 'Blocked';
 export type ProductStatus = "Active" | "Draft" | "Archived";
 export type StoreStatus = "Active" | "Inactive" | "Maintenance";
@@ -149,17 +149,19 @@ export interface Settlement {
 }
 
 export const orderStatusIcons: Record<OrderStatus, LucideIcon> = {
-  Pending: require("lucide-react").RefreshCw,
-  Confirmed: require("lucide-react").PackageCheck,
-  "Driver Picking Up": require("lucide-react").PersonStanding,
-  Delivering: require("lucide-react").Truck,
-  Delivered: require("lucide-react").CheckCircle,
-  Cancelled: require("lucide-react").XCircle,
+  Pending: RefreshCw,
+  Confirmed: PackageCheck,
+  Shipped: Truck,
+  "Driver Picking Up": PersonStanding,
+  Delivering: Truck,
+  Delivered: CheckCircle,
+  Cancelled: XCircle,
 };
 
 export const orderStatusColors: Record<OrderStatus, string> = {
   Pending: "bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/30 dark:text-yellow-400 border-yellow-500/30",
   Confirmed: "bg-blue-500/20 text-blue-700 dark:bg-blue-500/30 dark:text-blue-400 border-blue-500/30",
+  Shipped: "bg-indigo-500/20 text-indigo-700 dark:bg-indigo-500/30 dark:text-indigo-400 border-indigo-500/30",
   "Driver Picking Up": "bg-cyan-500/20 text-cyan-700 dark:bg-cyan-500/30 dark:text-cyan-400 border-cyan-500/30",
   Delivering: "bg-purple-500/20 text-purple-700 dark:bg-purple-500/30 dark:text-purple-400 border-purple-500/30",
   Delivered: "bg-emerald-500/20 text-emerald-700 dark:bg-emerald-500/30 dark:text-emerald-400 border-emerald-500/30",

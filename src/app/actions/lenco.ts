@@ -1,6 +1,7 @@
 'use server';
 
-import { initiateMobileMoneyCollection, MobileMoneyCollectionPayload } from "@/services/lencoService";
+import { initiateMobileMoneyCollection } from "@/services/lencoService";
+import { MobileMoneyCollectionPayload } from "@/types/lenco";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 

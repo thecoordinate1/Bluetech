@@ -10,65 +10,97 @@ export interface NavItem {
   external?: boolean;
 }
 
-export const navItems: NavItem[] = [
+export interface NavSection {
+  title?: string;
+  items: NavItem[];
+}
+
+export const navSections: NavSection[] = [
   {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
+    title: "Overview",
+    items: [
+      {
+        title: "Dashboard",
+        href: "/dashboard",
+        icon: LayoutDashboard,
+      },
+    ],
   },
   {
-    title: "Products",
-    href: "/products",
-    icon: Package,
+    title: "Operations",
+    items: [
+      {
+        title: "Orders",
+        href: "/orders",
+        icon: ShoppingCart,
+      },
+      {
+        title: "Products",
+        href: "/products",
+        icon: Package,
+      },
+      {
+        title: "Delivery",
+        href: "/delivery",
+        icon: Truck,
+      },
+      {
+        title: "Customers",
+        href: "/customers",
+        icon: Users,
+      },
+      {
+        title: "Returns", // Adding a place holder for returns if needed, but for now stick to existing
+        href: "/reviews", // Reviews kind of fits in operations or support. The user said "Reviews" previously.
+        icon: MessageSquare,
+      },
+    ],
   },
   {
-    title: "Orders",
-    href: "/orders",
-    icon: ShoppingCart,
+    title: "Growth",
+    items: [
+      {
+        title: "Marketing",
+        href: "/marketing",
+        icon: Tag,
+      },
+      {
+        title: "Marketplace",
+        href: "/market",
+        icon: Globe,
+      },
+    ],
   },
   {
-    title: "Delivery",
-    href: "/delivery",
-    icon: Truck,
-  },
-  {
-    title: "Stores",
-    href: "/stores",
-    icon: Store,
-  },
-  {
-    title: "Customers",
-    href: "/customers",
-    icon: Users,
-  },
-  {
-    title: "Marketing",
-    href: "/marketing",
-    icon: Tag,
-  },
-  {
-    title: "Marketplace",
-    href: "/market",
-    icon: Globe,
-  },
-  {
-    title: "Supplier",
-    href: "/supplier",
-    icon: Factory,
-  },
-  {
-    title: "Reviews",
-    href: "/reviews",
-    icon: MessageSquare,
-  },
-  {
-    title: "Notifications",
-    href: "/notifications",
-    icon: Bell,
+    title: "Management",
+    items: [
+      {
+        title: "Stores",
+        href: "/stores",
+        icon: Store,
+      },
+      {
+        title: "Supplier",
+        href: "/supplier",
+        icon: Factory,
+      },
+    ],
   },
   {
     title: "Support",
-    href: "/support",
-    icon: LifeBuoy,
+    items: [
+      {
+        title: "Notifications",
+        href: "/notifications",
+        icon: Bell,
+      },
+      {
+        title: "Help Center",
+        href: "/support",
+        icon: LifeBuoy,
+      },
+    ],
   },
 ];
+
+export const navItems: NavItem[] = navSections.flatMap((section) => section.items);

@@ -45,7 +45,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
-import { DollarSign, Eye, Filter, MoreHorizontal, PlusCircle, Printer, Search, ShoppingCart, Trash2, Truck, MapPin, ChevronLeft, ChevronRight, Check, AlertTriangle, PackageSearch, Copy, LocateFixed, Link as LinkIcon, Building } from "lucide-react";
+import { DollarSign, Eye, Filter, MoreHorizontal, PlusCircle, Printer, Search, ShoppingCart, Trash2, Truck, MapPin, ChevronLeft, ChevronRight, Check, AlertTriangle, PackageSearch, Copy, LocateFixed, Link as LinkIcon, Building, HelpCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
@@ -157,6 +157,7 @@ export default function OrdersPage() {
   const [pickupLocationInfo, setPickupLocationInfo] = React.useState<{ address: string; coords: { lat: number, lng: number } | null }>({ address: "", coords: null });
   const [isFetchingLocation, setIsFetchingLocation] = React.useState(false);
   const [isConfirmingDelivery, setIsConfirmingDelivery] = React.useState(false);
+  const [updatingOrderId, setUpdatingOrderId] = React.useState<string | null>(null);
   const isTransitioningToDelivery = React.useRef(false);
 
 
@@ -292,7 +293,10 @@ export default function OrdersPage() {
       toast({ variant: "destructive", title: "Store Not Selected", description: "Cannot update order status without a selected store." });
       return false;
     }
+    setUpdatingOrderId(orderId);
     const { data: updatedOrderData, error } = await updateOrderStatus(orderId, storeIdFromUrl, newStatus, options);
+    setUpdatingOrderId(null);
+
     if (error) {
       toast({ variant: "destructive", title: "Error Updating Status", description: error.message });
       return false;
@@ -850,7 +854,7 @@ export default function OrdersPage() {
                     </TableHeader>
                     <TableBody>
                       {filteredOrders.map((order) => {
-                        const Icon = orderStatusIcons[order.status];
+                        const Icon = orderStatusIcons[order.status] || HelpCircle;
                         return (
                           <TableRow key={order.id} className="cursor-pointer hover:bg-muted/30 transition-colors group" onClick={() => router.push(`/orders/${order.id}?${searchParams.toString()}`)}>
                             <TableCell className="font-mono text-xs font-medium text-muted-foreground">
@@ -962,7 +966,7 @@ export default function OrdersPage() {
                         toast({ title: "Copied", description: "Code copied to clipboard" });
                       }}
                       onUpdateStatus={(status) => handleUpdateStatus(order.id, status)}
-                      isUpdating={isUpdatingStatus}
+                      isUpdating={updatingOrderId === order.id}
                     />
                   ))}
                 </div>

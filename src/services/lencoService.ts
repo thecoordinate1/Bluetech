@@ -1,44 +1,31 @@
+import { MobileMoneyCollectionPayload, LencoCollectionResponse } from "@/types/lenco";
 
-export interface MobileMoneyCollectionPayload {
-    amount: string; // "100.00"
-    currency: string; // "ZMW"
-    provider: 'airtel' | 'mtn' | 'zamtel';
-    phone: string;
-    reference: string;
-}
-
-export interface LencoCollectionResponse {
-    status: boolean;
-    message: string;
-    data: {
-        id: string;
-        initiatedAt: string;
-        status: string; // "pending", "successful", "failed"
-        mobileMoneyDetails: {
-            phone: string;
-            operator: string;
-        } | null;
-        [key: string]: any;
-    };
-}
+import { ProxyAgent } from 'undici';
 
 export async function initiateMobileMoneyCollection(payload: MobileMoneyCollectionPayload): Promise<LencoCollectionResponse> {
     const url = 'https://api.lenco.co/access/v2/collections/mobile-money';
     const secretKey = process.env.LENCO_LIVE_SECRET_KEY;
+    const fixieUrl = process.env.FIXIE_URL;
 
     if (!secretKey) {
         throw new Error("Missing LENCO_LIVE_SECRET_KEY");
     }
 
     try {
-        const response = await fetch(url, {
+        let fetchOptions: RequestInit & { dispatcher?: any } = {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${secretKey}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(payload)
-        });
+        };
+
+        if (fixieUrl) {
+            fetchOptions.dispatcher = new ProxyAgent(fixieUrl);
+        }
+
+        const response = await fetch(url, fetchOptions as RequestInit);
 
         const data = await response.json();
 

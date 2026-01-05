@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar, ChevronRight, Copy, DollarSign, MoreHorizontal, ShoppingCart } from "lucide-react";
+import { Calendar, ChevronRight, Copy, DollarSign, HelpCircle, MoreHorizontal, ShoppingCart } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import type { Order as OrderUIType, OrderStatus } from "@/lib/types";
@@ -21,10 +21,10 @@ interface MobileOrderCardProps {
 }
 
 export function MobileOrderCard({ order, onCopyCode, onUpdateStatus, isUpdating }: MobileOrderCardProps) {
-    const Icon = orderStatusIcons[order.status];
+    const Icon = orderStatusIcons[order.status] || HelpCircle;
 
     return (
-        <Card className="mb-4 overflow-hidden border-l-4 shadow-sm" style={{ borderLeftColor: orderStatusColors[order.status].split(' ')[0].replace('bg-', '') }}>
+        <Card className="mb-4 overflow-hidden border-l-4 shadow-sm" style={{ borderLeftColor: (orderStatusColors[order.status] || "bg-gray-500").split(' ')[0].replace('bg-', '') }}>
             <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-3">

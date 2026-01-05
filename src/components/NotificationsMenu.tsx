@@ -47,13 +47,22 @@ export function NotificationsMenu() {
         return () => clearInterval(interval);
     }, [fetchNotifications]);
 
-    const handleMarkRead = async (id: string, link: string | null) => {
+    const handleMarkRead = async (id: string, link: string | null, storeId?: string) => {
         await markNotificationAsRead(id);
         setUnreadCount(prev => Math.max(0, prev - 1));
         setNotifications(notifications.map(n => n.id === id ? { ...n, is_read: true } : n));
         if (link) {
             setIsOpen(false);
-            router.push(link);
+            if (link.includes('/stores/')) {
+                window.location.href = link;
+            } else {
+                let targetLink = link;
+                if (storeId) {
+                    const separator = link.includes('?') ? '&' : '?';
+                    targetLink = `${link}${separator}storeId=${storeId}`;
+                }
+                router.push(targetLink);
+            }
         }
     };
 
@@ -111,7 +120,7 @@ export function NotificationsMenu() {
                                         "flex gap-3 p-4 transition-colors hover:bg-muted/50 cursor-pointer text-sm",
                                         !notification.is_read ? "bg-muted/30" : ""
                                     )}
-                                    onClick={() => handleMarkRead(notification.id, notification.link)}
+                                    onClick={() => handleMarkRead(notification.id, notification.link, notification.store_id)}
                                 >
                                     <div className="mt-0.5">{getIcon(notification.type)}</div>
                                     <div className="flex-1 space-y-1">
