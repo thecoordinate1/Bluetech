@@ -60,7 +60,7 @@ import { getCustomerByEmail, createCustomer as createNewCustomer, type CustomerP
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Order as OrderUIType } from "@/lib/types";
 import { mapOrderFromSupabaseToUI } from "@/lib/order-mapper";
-import { MobileOrderCard } from "@/components/MobileOrderCard";
+
 
 const ITEMS_PER_PAGE = 10;
 
@@ -442,6 +442,10 @@ export default function OrdersPage() {
     }
     if (!newOrderData.customerName.trim() || !newOrderData.customerEmail.trim()) {
       toast({ variant: "destructive", title: "Missing Customer Info", description: "Customer Name and Email are required." });
+      return;
+    }
+    if (!newOrderData.shippingMethod) {
+      toast({ variant: "destructive", title: "Missing Delivery Tier", description: "Please select a delivery tier." });
       return;
     }
     setIsSubmitting(true);

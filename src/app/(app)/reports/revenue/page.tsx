@@ -292,7 +292,7 @@ export default function RevenueReportPage() {
                                             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-muted-foreground font-bold text-xs ring-2 ring-background">
                                                 {i + 1}
                                             </div>
-                                            <div>
+                                            <div className="min-w-0">
                                                 <p className="font-medium line-clamp-1">{product.product_name}</p>
                                                 <p className="text-xs text-muted-foreground">{product.units_sold} units sold</p>
                                             </div>

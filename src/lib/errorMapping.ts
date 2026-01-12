@@ -49,7 +49,8 @@ export function mapSupabaseError(error: any, context: string = 'Operation'): Err
 
     // Not Null violation
     if (error.code === '23502') {
-        return new Error(`A required field is missing for ${context.toLowerCase()}.`);
+        const column = error.column ? ` (${error.column})` : '';
+        return new Error(`A required field${column} is missing for ${context.toLowerCase()}.`);
     }
 
     // RLS or Permissions (often manifests as empty error or specific 403-like messages depending on client)

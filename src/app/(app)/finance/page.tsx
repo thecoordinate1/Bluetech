@@ -177,53 +177,93 @@ export default function FinancePage() {
                     </Button>
                 </div>
                 <Card>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Reference</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Amount</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {transactions.length === 0 ? (
+                    {/* Desktop View: Table */}
+                    <div className="hidden md:block">
+                        <Table>
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
-                                        No transactions found yet.
-                                        <br />
-                                        <span className="text-xs">Once you start selling, your earnings will appear here.</span>
-                                    </TableCell>
+                                    <TableHead>Date</TableHead>
+                                    <TableHead>Reference</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead className="text-right">Amount</TableHead>
                                 </TableRow>
-                            ) : (
-                                transactions.map((tx) => (
-                                    <TableRow key={tx.id}>
-                                        <TableCell className="text-muted-foreground">
-                                            {format(new Date(tx.created_at), 'MMM dd, yyyy')}
+                            </TableHeader>
+                            <TableBody>
+                                {transactions.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                                            No transactions found yet.
                                             <br />
-                                            <span className="text-xs opacity-70">{format(new Date(tx.created_at), 'hh:mm a')}</span>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="font-medium text-sm">{tx.reference || 'N/A'}</div>
-                                            <div className="text-xs text-muted-foreground truncate max-w-[150px]">
-                                                {tx.lenco_transaction_id || 'ID: ' + tx.id.slice(0, 8)}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <SettlementStatusBadge status={tx.status} />
-                                        </TableCell>
-                                        <TableCell className="text-right font-medium">
-                                            {tx.status === 'frozen' || tx.status === 'disputed' ? (
-                                                <span className="text-red-600">ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                                            ) : (
-                                                <span>ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                                            )}
+                                            <span className="text-xs">Once you start selling, your earnings will appear here.</span>
                                         </TableCell>
                                     </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
+                                ) : (
+                                    transactions.map((tx) => (
+                                        <TableRow key={tx.id}>
+                                            <TableCell className="text-muted-foreground">
+                                                {format(new Date(tx.created_at), 'MMM dd, yyyy')}
+                                                <br />
+                                                <span className="text-xs opacity-70">{format(new Date(tx.created_at), 'hh:mm a')}</span>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="font-medium text-sm">{tx.reference || 'N/A'}</div>
+                                                <div className="text-xs text-muted-foreground truncate max-w-[150px]">
+                                                    {tx.lenco_transaction_id || 'ID: ' + tx.id.slice(0, 8)}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <SettlementStatusBadge status={tx.status} />
+                                            </TableCell>
+                                            <TableCell className="text-right font-medium">
+                                                {tx.status === 'frozen' || tx.status === 'disputed' ? (
+                                                    <span className="text-red-600">ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                                ) : (
+                                                    <span>ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                    {/* Mobile View: Cards */}
+                    <div className="md:hidden divide-y">
+                        {transactions.length === 0 ? (
+                            <div className="text-center py-12 text-muted-foreground">
+                                No transactions found yet.
+                                <br />
+                                <span className="text-xs">Once you start selling, your earnings will appear here.</span>
+                            </div>
+                        ) : (
+                            transactions.map((tx) => (
+                                <div key={tx.id} className="p-4 space-y-3">
+                                    <div className="flex items-start justify-between">
+                                        <div>
+                                            <p className="font-medium text-sm">{tx.reference || 'N/A'}</p>
+                                            <p className="text-xs text-muted-foreground mt-0.5">
+                                                {format(new Date(tx.created_at), 'MMM dd, yyyy • hh:mm a')}
+                                            </p>
+                                        </div>
+                                        <div className="text-right">
+                                            {tx.status === 'frozen' || tx.status === 'disputed' ? (
+                                                <span className="font-semibold text-red-600">ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                            ) : (
+                                                <span className="font-semibold">ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs">
+                                        <div className="text-muted-foreground truncate max-w-[180px]">
+                                            ID: {tx.lenco_transaction_id ? tx.lenco_transaction_id.slice(0, 10) + '...' : tx.id.slice(0, 8)}
+                                        </div>
+                                        <SettlementStatusBadge status={tx.status} />
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </Card>
             </div>
         </div>
