@@ -153,7 +153,7 @@ export default function MarketingPage() {
                                     <SelectTrigger className="col-span-1 md:col-span-3"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="percentage">Percentage (%)</SelectItem>
-                                        <SelectItem value="fixed_amount">Fixed Amount (ZMW)</SelectItem>
+                                        <SelectItem value="fixed_amount">Fixed Amount (K)</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -228,7 +228,7 @@ export default function MarketingPage() {
                                         <div>
                                             <div className="font-mono font-bold text-lg text-primary">{coupon.code}</div>
                                             <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
-                                                <span>{coupon.discount_type === 'percentage' ? `${coupon.discount_value}% OFF` : `ZMW ${coupon.discount_value} OFF`}</span>
+                                                <span>{coupon.discount_type === 'percentage' ? `${coupon.discount_value}% OFF` : `K ${coupon.discount_value} OFF`}</span>
                                                 {coupon.min_spend > 0 && <span className="text-xs bg-muted px-1.5 py-0.5 rounded">Min: K{coupon.min_spend}</span>}
                                             </div>
                                         </div>
@@ -295,7 +295,7 @@ export default function MarketingPage() {
                                                 {coupon.min_spend > 0 && <span className="block text-xs text-muted-foreground font-sans">Min: {coupon.min_spend}</span>}
                                             </TableCell>
                                             <TableCell>
-                                                {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `ZMW ${coupon.discount_value}`}
+                                                {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `K ${coupon.discount_value}`}
                                             </TableCell>
                                             <TableCell>
                                                 {coupon.used_count} / {coupon.usage_limit || "∞"}

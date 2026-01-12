@@ -308,7 +308,7 @@ export function ProductForm({ initialData, onSubmit, isSubmitting, onCancel, isS
                                         name="price"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Price (ZMW)</FormLabel>
+                                                <FormLabel>Price (K)</FormLabel>
                                                 <FormControl>
                                                     <Input type="number" step="0.01" {...field} />
                                                 </FormControl>
@@ -321,7 +321,7 @@ export function ProductForm({ initialData, onSubmit, isSubmitting, onCancel, isS
                                         name="order_price"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Order Price (ZMW)</FormLabel>
+                                                <FormLabel>Order Price (K)</FormLabel>
                                                 <FormControl>
                                                     <Input type="number" step="0.01" {...field} value={field.value || ""} placeholder="Cost price" />
                                                 </FormControl>
@@ -648,7 +648,7 @@ export function ProductForm({ initialData, onSubmit, isSubmitting, onCancel, isS
                                             name="supplier_price"
                                             render={({ field }) => (
                                                 <FormItem className="mt-4">
-                                                    <FormLabel>Wholesale Price (ZMW)</FormLabel>
+                                                    <FormLabel>Wholesale Price (K)</FormLabel>
                                                     <FormDescription>The price other vendors will see and pay.</FormDescription>
                                                     <FormControl>
                                                         <Input type="number" step="0.01" {...field} value={field.value || ""} />

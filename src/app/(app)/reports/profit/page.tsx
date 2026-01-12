@@ -55,11 +55,11 @@ import { useToast } from "@/hooks/use-toast";
 // --- Chart Config ---
 const chartConfig = {
     profit: {
-        label: "Gross Profit (ZMW)",
+        label: "Gross Profit (K)",
         color: "hsl(var(--primary))",
     },
     cogs: {
-        label: "COGS (ZMW)",
+        label: "COGS (K)",
         color: "hsl(var(--destructive))",
     },
 };

@@ -501,7 +501,7 @@ export default function OrdersPage() {
       payment_method: newOrderData.paymentMethod || null,
       shipping_latitude: newOrderData.shippingLatitude ? parseFloat(String(newOrderData.shippingLatitude)) : null,
       shipping_longitude: newOrderData.shippingLongitude ? parseFloat(String(newOrderData.shippingLongitude)) : null,
-      delivery_type: null,
+      delivery_type: 'courier', // Default to courier for new orders created via dashboard
       customer_specification: newOrderData.customerSpecification || null,
       delivery_cost: newOrderData.delivery_cost ? parseFloat(String(newOrderData.delivery_cost)) : null,
       service_fees: newOrderData.serviceFees ? parseFloat(String(newOrderData.serviceFees)) : 0,
@@ -558,7 +558,7 @@ export default function OrdersPage() {
       "Date": format(new Date(o.date), 'yyyy-MM-dd HH:mm'),
       "Customer": o.customerName,
       "Status": o.status,
-      "Total (ZMW)": o.total,
+      "Total (K)": o.total,
       "Items": o.detailedItems.length,
       "Payment": o.paymentMethod,
       "Delivery": o.deliveryTier
@@ -727,7 +727,7 @@ export default function OrdersPage() {
                               <SelectContent>
                                 {storeProducts.map(product => (
                                   <SelectItem key={product.id} value={product.id}>
-                                    {product.name} (ZMW {product.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
+                                    {product.name} (K {product.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
                                   </SelectItem>
                                 ))}
                                 {storeProducts.length === 0 && !isLoadingStoreProducts && <SelectItem value="no-prods" disabled>No active products</SelectItem>}
@@ -767,8 +767,8 @@ export default function OrdersPage() {
                                       </TableCell>
                                       <TableCell className="font-medium">{item.productName}</TableCell>
                                       <TableCell className="text-right">{item.quantity}</TableCell>
-                                      <TableCell className="text-right">ZMW {item.unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</TableCell>
-                                      <TableCell className="text-right">ZMW {(item.unitPrice * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}</TableCell>
+                                      <TableCell className="text-right">K {item.unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</TableCell>
+                                      <TableCell className="text-right">K {(item.unitPrice * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2 })}</TableCell>
                                       <TableCell>
                                         <Button type="button" variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleRemoveProductFromOrder(item.productId)}>
                                           <Trash2 className="h-4 w-4" />

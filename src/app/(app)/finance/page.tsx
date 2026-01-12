@@ -216,9 +216,9 @@ export default function FinancePage() {
                                             </TableCell>
                                             <TableCell className="text-right font-medium">
                                                 {tx.status === 'frozen' || tx.status === 'disputed' ? (
-                                                    <span className="text-red-600">ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                                    <span className="text-red-600">K {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                                                 ) : (
-                                                    <span>ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                                    <span>K {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                                                 )}
                                             </TableCell>
                                         </TableRow>
@@ -248,9 +248,9 @@ export default function FinancePage() {
                                         </div>
                                         <div className="text-right">
                                             {tx.status === 'frozen' || tx.status === 'disputed' ? (
-                                                <span className="font-semibold text-red-600">ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                                <span className="font-semibold text-red-600">K {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                                             ) : (
-                                                <span className="font-semibold">ZMW {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                                <span className="font-semibold">K {Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                                             )}
                                         </div>
                                     </div>

@@ -246,7 +246,7 @@ const RecentOrderItem = ({ order }: { order: OrderFromSupabase }) => {
         </div>
       </div>
       <div className="text-right shrink-0">
-        <p className="text-sm font-bold whitespace-nowrap">ZMW {order.total_amount?.toLocaleString()}</p>
+        <p className="text-sm font-bold whitespace-nowrap">K {order.total_amount?.toLocaleString()}</p>
         <Button variant="ghost" size="sm" className="h-6 w-6 p-0 rounded-full ml-auto mt-1" asChild>
           <Link href={`/orders/${order.id}`}>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />

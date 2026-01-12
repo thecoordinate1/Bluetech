@@ -385,7 +385,7 @@ export default function ProductsPage() {
                         {product.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>ZMW {product.price.toFixed(2)}</TableCell>
+                    <TableCell>K {product.price.toFixed(2)}</TableCell>
                     <TableCell>{product.stock}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>

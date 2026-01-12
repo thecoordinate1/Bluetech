@@ -50,7 +50,7 @@ import type { User as AuthUser } from '@supabase/supabase-js';
 // --- Chart Config ---
 const chartConfig = {
     revenue: {
-        label: "Revenue (ZMW)",
+        label: "Revenue (K)",
         color: "hsl(var(--primary))",
     },
     transactions: {
