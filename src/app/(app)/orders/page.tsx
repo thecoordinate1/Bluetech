@@ -139,6 +139,7 @@ export default function OrdersPage() {
   const [newOrderItems, setNewOrderItems] = React.useState<NewOrderItemEntry[]>([]);
   const [selectedProductIdToAdd, setSelectedProductIdToAdd] = React.useState<string>("");
   const [quantityToAdd, setQuantityToAdd] = React.useState<number>(1);
+  const [validationErrors, setValidationErrors] = React.useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const [storeProducts, setStoreProducts] = React.useState<ProductUIType[]>([]);
@@ -435,19 +436,24 @@ export default function OrdersPage() {
     if (!storeIdFromUrl || !authUser) {
       toast({ variant: "destructive", title: "Error", description: "Store or user not identified." });
       return;
-    }
-    if (newOrderItems.length === 0) {
       toast({ title: "No Items", description: "Please add at least one product to the order.", variant: "destructive" });
       return;
     }
-    if (!newOrderData.customerName.trim() || !newOrderData.customerEmail.trim()) {
-      toast({ variant: "destructive", title: "Missing Customer Info", description: "Customer Name and Email are required." });
+    // Clear previous errors
+    setValidationErrors({});
+
+    const errors: Record<string, string> = {};
+    if (!newOrderData.customerName.trim()) errors.customerName = "Customer Name is required.";
+    if (!newOrderData.customerEmail.trim()) errors.customerEmail = "Customer Email is required.";
+    if (!newOrderData.shippingMethod) errors.shippingMethod = "Please select a delivery tier.";
+    if (!newOrderData.paymentMethod) errors.paymentMethod = "Please select a payment method.";
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      toast({ variant: "destructive", title: "Missing Fields", description: "Please fill in all required fields highlighted in red." });
       return;
     }
-    if (!newOrderData.shippingMethod) {
-      toast({ variant: "destructive", title: "Missing Delivery Tier", description: "Please select a delivery tier." });
-      return;
-    }
+
     setIsSubmitting(true);
 
     let customerIdForOrder: string | null = null;
@@ -602,12 +608,27 @@ export default function OrdersPage() {
                     <Card className="border-0 sm:border shadow-none sm:shadow-sm">
                       <CardContent className="p-0 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="grid gap-2">
-                          <Label htmlFor="customerName">Customer Name</Label>
-                          <Input id="customerName" name="customerName" value={newOrderData.customerName} onChange={handleNewOrderInputChange} required className="h-11 sm:h-10" />
+                          <Label htmlFor="customerName" className={validationErrors.customerName ? "text-destructive" : ""}>Customer Name</Label>
+                          <Input
+                            id="customerName"
+                            name="customerName"
+                            value={newOrderData.customerName}
+                            onChange={handleNewOrderInputChange}
+                            className={`h-11 sm:h-10 ${validationErrors.customerName ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                          />
+                          {validationErrors.customerName && <p className="text-xs text-destructive">{validationErrors.customerName}</p>}
                         </div>
                         <div className="grid gap-2">
-                          <Label htmlFor="customerEmail">Customer Email</Label>
-                          <Input id="customerEmail" name="customerEmail" type="email" value={newOrderData.customerEmail} onChange={handleNewOrderInputChange} required className="h-11 sm:h-10" />
+                          <Label htmlFor="customerEmail" className={validationErrors.customerEmail ? "text-destructive" : ""}>Customer Email</Label>
+                          <Input
+                            id="customerEmail"
+                            name="customerEmail"
+                            type="email"
+                            value={newOrderData.customerEmail}
+                            onChange={handleNewOrderInputChange}
+                            className={`h-11 sm:h-10 ${validationErrors.customerEmail ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                          />
+                          {validationErrors.customerEmail && <p className="text-xs text-destructive">{validationErrors.customerEmail}</p>}
                         </div>
                       </CardContent>
                     </Card>
@@ -650,9 +671,9 @@ export default function OrdersPage() {
                           />
                         </div>
                         <div className="grid gap-2">
-                          <Label htmlFor="shippingMethod">Delivery Tier</Label>
+                          <Label htmlFor="shippingMethod" className={validationErrors.shippingMethod ? "text-destructive" : ""}>Delivery Tier</Label>
                           <Select name="shippingMethod" value={newOrderData.shippingMethod} onValueChange={handleShippingMethodChange}>
-                            <SelectTrigger id="shippingMethod" className="h-11 sm:h-10">
+                            <SelectTrigger id="shippingMethod" className={`h-11 sm:h-10 ${validationErrors.shippingMethod ? "border-destructive ring-destructive" : ""}`}>
                               <SelectValue placeholder="Select delivery speed" />
                             </SelectTrigger>
                             <SelectContent>
@@ -661,14 +682,26 @@ export default function OrdersPage() {
                               <SelectItem value="Economy">Economy (4-7 days)</SelectItem>
                             </SelectContent>
                           </Select>
+                          {validationErrors.shippingMethod && <p className="text-xs text-destructive">{validationErrors.shippingMethod}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="deliveryCost">Delivery Cost</Label>
                           <Input id="deliveryCost" name="delivery_cost" type="number" step="0.01" value={newOrderData.delivery_cost} onChange={handleNewOrderInputChange} className="h-11 sm:h-10" />
                         </div>
                         <div className="grid gap-2">
-                          <Label htmlFor="paymentMethod">Payment Method</Label>
-                          <Input id="paymentMethod" name="paymentMethod" value={newOrderData.paymentMethod} onChange={handleNewOrderInputChange} className="h-11 sm:h-10" />
+                          <Label htmlFor="paymentMethod" className={validationErrors.paymentMethod ? "text-destructive" : ""}>Payment Method</Label>
+                          <Select name="paymentMethod" value={newOrderData.paymentMethod} onValueChange={(val) => setNewOrderData(prev => ({ ...prev, paymentMethod: val }))}>
+                            <SelectTrigger id="paymentMethod" className={`h-11 sm:h-10 ${validationErrors.paymentMethod ? "border-destructive ring-destructive" : ""}`}>
+                              <SelectValue placeholder="Select payment method" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="cash_on_delivery">Cash on Delivery</SelectItem>
+                              <SelectItem value="mobile_money">Mobile Money</SelectItem>
+                              <SelectItem value="card">Card Payment</SelectItem>
+                              <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {validationErrors.paymentMethod && <p className="text-xs text-destructive">{validationErrors.paymentMethod}</p>}
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="serviceFees">Service Fees</Label>

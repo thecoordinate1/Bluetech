@@ -211,7 +211,7 @@ export default function ProfitReportPage() {
     const formatMoney = (amount: number) => `K${amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
     return (
-        <div className="min-h-screen bg-background pb-20">
+        <div className="min-h-screen bg-background pb-20 w-full overflow-x-hidden">
             {/* Header */}
             <div className="border-b bg-card/50 backdrop-blur sticky top-0 z-10">
                 <div className="container max-w-7xl p-4 md:px-8 h-16 flex items-center justify-between">
