@@ -890,13 +890,13 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)] bg-muted/10">
       {/* Sidebar Navigation */}
-      <aside className="w-full lg:w-72 bg-background border-b lg:border-b-0 lg:border-r p-3 lg:p-6 sticky top-0 z-20 shadow-sm lg:shadow-none">
+      <aside className="w-full lg:w-72 bg-background border-b lg:border-b-0 lg:border-r p-0 lg:p-6 sticky top-0 z-20 shadow-sm lg:shadow-none">
         <div className="mb-8 hidden lg:block">
           <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
           <p className="text-muted-foreground text-sm">Manage your empire.</p>
         </div>
 
-        <nav className="flex lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
+        <nav className="flex lg:flex-col gap-2 overflow-x-auto py-3 px-4 lg:p-0 scrollbar-hide">
           {SETTINGS_SECTIONS.map(item => (
             <NavItem
               key={item.id}

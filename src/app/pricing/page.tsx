@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import Link from "next/link";
 
+import { Footer } from "@/components/layout/Footer";
+
 export default function PricingPage() {
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -139,12 +141,7 @@ export default function PricingPage() {
                 </div>
             </section>
 
-            {/* Footer (Simplified) */}
-            <footer className="py-12 border-t border-border/50 bg-muted/10">
-                <div className="container px-4 md:px-6 text-center text-sm text-muted-foreground">
-                    &copy; {new Date().getFullYear()} E-Ntemba. All rights reserved.
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }

@@ -115,7 +115,9 @@ export default function SupportPage() {
                             <h3 className="font-semibold">WhatsApp Support</h3>
                             <p className="text-xs text-muted-foreground">Quick chat for urgent issues</p>
                         </div>
-                        <Button variant="outline" size="sm" className="w-full mt-2">Chat Now</Button>
+                        <Button variant="outline" size="sm" className="w-full mt-2" asChild>
+                            <a href="https://wa.me/260776204807" target="_blank" rel="noopener noreferrer">Chat Now</a>
+                        </Button>
                     </CardContent>
                 </Card>
                 <Card className="shadow-sm hover:shadow-md transition-shadow">
@@ -125,7 +127,9 @@ export default function SupportPage() {
                             <h3 className="font-semibold">Email Us</h3>
                             <p className="text-xs text-muted-foreground">For detailed inquiries</p>
                         </div>
-                        <Button variant="outline" size="sm" className="w-full mt-2">support@entemba.shop</Button>
+                        <Button variant="outline" size="sm" className="w-full mt-2" asChild>
+                            <a href="mailto:support@entemba.shop">support@entemba.shop</a>
+                        </Button>
                     </CardContent>
                 </Card>
                 <Card className="shadow-sm hover:shadow-md transition-shadow">
@@ -135,7 +139,9 @@ export default function SupportPage() {
                             <h3 className="font-semibold">Call Center</h3>
                             <p className="text-xs text-muted-foreground">Mon-Fri, 9am - 5pm</p>
                         </div>
-                        <Button variant="outline" size="sm" className="w-full mt-2">+260 97 000 0000</Button>
+                        <Button variant="outline" size="sm" className="w-full mt-2" asChild>
+                            <a href="tel:+260776204807">+260 776 204 807</a>
+                        </Button>
                     </CardContent>
                 </Card>
             </div>

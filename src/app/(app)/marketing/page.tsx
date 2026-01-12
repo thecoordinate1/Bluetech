@@ -143,31 +143,31 @@ export default function MarketingPage() {
                             <DialogDescription>Create a discount code for your customers.</DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="code" className="text-right">Code</Label>
-                                <Input id="code" value={newCode} onChange={e => setNewCode(e.target.value)} placeholder="SUMMER10" className="col-span-3 uppercase" />
+                            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-2 md:gap-4">
+                                <Label htmlFor="code" className="text-left md:text-right">Code</Label>
+                                <Input id="code" value={newCode} onChange={e => setNewCode(e.target.value)} placeholder="SUMMER10" className="col-span-1 md:col-span-3 uppercase" />
                             </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="type" className="text-right">Type</Label>
+                            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-2 md:gap-4">
+                                <Label htmlFor="type" className="text-left md:text-right">Type</Label>
                                 <Select value={newType} onValueChange={(v: any) => setNewType(v)}>
-                                    <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
+                                    <SelectTrigger className="col-span-1 md:col-span-3"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="percentage">Percentage (%)</SelectItem>
                                         <SelectItem value="fixed_amount">Fixed Amount (ZMW)</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="value" className="text-right">Value</Label>
-                                <Input id="value" type="number" value={newValue} onChange={e => setNewValue(e.target.value)} placeholder={newType === 'percentage' ? "10" : "50"} className="col-span-3" />
+                            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-2 md:gap-4">
+                                <Label htmlFor="value" className="text-left md:text-right">Value</Label>
+                                <Input id="value" type="number" value={newValue} onChange={e => setNewValue(e.target.value)} placeholder={newType === 'percentage' ? "10" : "50"} className="col-span-1 md:col-span-3" />
                             </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="min_spend" className="text-right">Min Spend</Label>
-                                <Input id="min_spend" type="number" value={newMinSpend} onChange={e => setNewMinSpend(e.target.value)} className="col-span-3" />
+                            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-2 md:gap-4">
+                                <Label htmlFor="min_spend" className="text-left md:text-right">Min Spend</Label>
+                                <Input id="min_spend" type="number" value={newMinSpend} onChange={e => setNewMinSpend(e.target.value)} className="col-span-1 md:col-span-3" />
                             </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="limit" className="text-right">Total Limit</Label>
-                                <Input id="limit" type="number" value={newLimit} onChange={e => setNewLimit(e.target.value)} placeholder="Unlimited" className="col-span-3" />
+                            <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-2 md:gap-4">
+                                <Label htmlFor="limit" className="text-left md:text-right">Total Limit</Label>
+                                <Input id="limit" type="number" value={newLimit} onChange={e => setNewLimit(e.target.value)} placeholder="Unlimited" className="col-span-1 md:col-span-3" />
                             </div>
                         </div>
                         <DialogFooter>
@@ -215,6 +215,60 @@ export default function MarketingPage() {
                     <CardDescription>Manage your active and expired discount codes.</CardDescription>
                 </CardHeader>
                 <CardContent>
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-4">
+                        {coupons.length === 0 ? (
+                            <div className="text-center py-8 text-muted-foreground border rounded-lg bg-muted/20">
+                                No coupons found.
+                            </div>
+                        ) : (
+                            coupons.map((coupon) => (
+                                <div key={coupon.id} className="p-4 border rounded-xl bg-card flex flex-col gap-3 shadow-sm">
+                                    <div className="flex items-start justify-between">
+                                        <div>
+                                            <div className="font-mono font-bold text-lg text-primary">{coupon.code}</div>
+                                            <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
+                                                <span>{coupon.discount_type === 'percentage' ? `${coupon.discount_value}% OFF` : `ZMW ${coupon.discount_value} OFF`}</span>
+                                                {coupon.min_spend > 0 && <span className="text-xs bg-muted px-1.5 py-0.5 rounded">Min: K{coupon.min_spend}</span>}
+                                            </div>
+                                        </div>
+                                        <Badge variant="outline" className={coupon.is_active ? "bg-green-500/10 text-green-600 border-green-200" : "bg-slate-500/10 text-slate-600 border-slate-200"}>
+                                            {coupon.is_active ? "Active" : "Inactive"}
+                                        </Badge>
+                                    </div>
+
+                                    <div className="flex items-center justify-between text-sm py-2 border-t border-b border-dashed">
+                                        <span className="text-muted-foreground">Usage</span>
+                                        <span className="font-medium">{coupon.used_count} / {coupon.usage_limit || "∞"}</span>
+                                    </div>
+
+                                    <div className="flex items-center justify-between gap-2">
+                                        <div className="text-xs text-muted-foreground">
+                                            Created: {format(new Date(coupon.created_at), 'MMM d, yyyy')}
+                                        </div>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                                    <MoreHorizontal className="h-4 w-4" />
+                                            </DropdownMenuTrigger>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem onClick={() => handleToggleStatus(coupon.id, coupon.is_active)}>
+                                                {coupon.is_active ? <><Ban className="mr-2 h-4 w-4" /> Deactivate</> : <><CheckCircle className="mr-2 h-4 w-4" /> Activate</>}
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="text-red-600 focus:text-red-600" onClick={() => handleDelete(coupon.id)}>
+                                                <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                                </div>
+                    ))
+                        )}
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden md:block">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -279,8 +333,9 @@ export default function MarketingPage() {
                             )}
                         </TableBody>
                     </Table>
-                </CardContent>
-            </Card>
-        </div>
+                </div>
+            </CardContent>
+        </Card>
+        </div >
     );
 }

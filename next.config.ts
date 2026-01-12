@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https' as const,
-        hostname: 'noympgnaetcrtpdlkkry.supabase.co', // Added Supabase hostname
+        hostname: '**.supabase.co', // Matches any Supabase project ID
         port: '',
         pathname: '/**',
       },

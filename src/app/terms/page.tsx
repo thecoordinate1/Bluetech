@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Scale } from "lucide-react";
 import Link from "next/link";
+import { Footer } from "@/components/layout/Footer";
 
 export default function TermsOfServicePage() {
   return (
@@ -128,6 +129,7 @@ export default function TermsOfServicePage() {
         </div>
       </section>
 
+      <Footer />
     </div>
   );
 }
