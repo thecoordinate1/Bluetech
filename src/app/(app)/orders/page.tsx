@@ -48,6 +48,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { DollarSign, Eye, Filter, MoreHorizontal, PlusCircle, Printer, Search, ShoppingCart, Trash2, Truck, MapPin, ChevronLeft, ChevronRight, Check, AlertTriangle, PackageSearch, Copy, LocateFixed, Link as LinkIcon, Building, HelpCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { MobileOrderCard } from "@/components/MobileOrderCard";
 import * as React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { createClient } from '@/lib/supabase/client';
@@ -803,17 +804,19 @@ export default function OrdersPage() {
       {/* Filters & Content */}
       <div className="flex flex-col gap-4">
         <Tabs defaultValue="All" className="w-full" value={statusFilter} onValueChange={(val) => { setStatusFilter(val as any); setCurrentPage(1); }}>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
-            <TabsList className="bg-muted/50 p-1 h-auto flex-wrap">
-              <TabsTrigger value="All" className="rounded-sm px-4">All</TabsTrigger>
-              <TabsTrigger value="Pending" className="rounded-sm px-4">Pending</TabsTrigger>
-              <TabsTrigger value="Confirmed" className="rounded-sm px-4">Confirmed</TabsTrigger>
-              <TabsTrigger value="Shipped" className="rounded-sm px-4">Shipped</TabsTrigger>
-              <TabsTrigger value="Delivered" className="rounded-sm px-4">Delivered</TabsTrigger>
-              <TabsTrigger value="Cancelled" className="rounded-sm px-4">Cancelled</TabsTrigger>
-            </TabsList>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 sticky top-16 sm:static z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-2 -mx-2 sm:p-0 sm:m-0 border-b sm:border-0">
+            <ScrollArea className="w-full sm:w-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+              <TabsList className="bg-muted/50 p-1 h-auto inline-flex w-max sm:w-auto">
+                <TabsTrigger value="All" className="rounded-sm px-3 py-1.5 text-xs sm:text-sm">All</TabsTrigger>
+                <TabsTrigger value="Pending" className="rounded-sm px-3 py-1.5 text-xs sm:text-sm">Pending</TabsTrigger>
+                <TabsTrigger value="Confirmed" className="rounded-sm px-3 py-1.5 text-xs sm:text-sm">Confirmed</TabsTrigger>
+                <TabsTrigger value="Shipped" className="rounded-sm px-3 py-1.5 text-xs sm:text-sm">Shipped</TabsTrigger>
+                <TabsTrigger value="Delivered" className="rounded-sm px-3 py-1.5 text-xs sm:text-sm">Delivered</TabsTrigger>
+                <TabsTrigger value="Cancelled" className="rounded-sm px-3 py-1.5 text-xs sm:text-sm">Cancelled</TabsTrigger>
+              </TabsList>
+            </ScrollArea>
 
-            <div className="relative w-full sm:w-auto">
+            <div className="relative w-full sm:w-auto mt-2 sm:mt-0">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
@@ -982,7 +985,7 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Mobile View: Cards */}
-                <div className="md:hidden space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                <div className="md:hidden space-y-4 animate-in fade-in slide-in-from-bottom-2 pb-20">
                   {filteredOrders.map(order => (
                     <MobileOrderCard
                       key={order.id}
@@ -999,7 +1002,7 @@ export default function OrdersPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-between pt-4">
+                  <div className="flex items-center justify-between pt-4 pb-20 sm:pb-0">
                     <span className="text-sm text-muted-foreground">
                       Page {currentPage} of {totalPages} ({totalOrders} orders)
                     </span>
