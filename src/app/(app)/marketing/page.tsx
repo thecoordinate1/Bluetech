@@ -250,92 +250,92 @@ export default function MarketingPage() {
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                                                     <MoreHorizontal className="h-4 w-4" />
+                                                </Button>
                                             </DropdownMenuTrigger>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem onClick={() => handleToggleStatus(coupon.id, coupon.is_active)}>
-                                                {coupon.is_active ? <><Ban className="mr-2 h-4 w-4" /> Deactivate</> : <><CheckCircle className="mr-2 h-4 w-4" /> Activate</>}
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-red-600 focus:text-red-600" onClick={() => handleDelete(coupon.id)}>
-                                                <Trash2 className="mr-2 h-4 w-4" /> Delete
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                            <DropdownMenuContent align="end">
+                                                <DropdownMenuItem onClick={() => handleToggleStatus(coupon.id, coupon.is_active)}>
+                                                    {coupon.is_active ? <><Ban className="mr-2 h-4 w-4" /> Deactivate</> : <><CheckCircle className="mr-2 h-4 w-4" /> Activate</>}
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem className="text-red-600 focus:text-red-600" onClick={() => handleDelete(coupon.id)}>
+                                                    <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
                                 </div>
-                                </div>
-                    ))
+                            ))
                         )}
-                </div>
+                    </div>
 
-                {/* Desktop Table View */}
-                <div className="hidden md:block">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Code</TableHead>
-                                <TableHead>Discount</TableHead>
-                                <TableHead>Usage</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Created</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {coupons.length === 0 ? (
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block">
+                        <Table>
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                                        No coupons found. Create one to get started!
-                                    </TableCell>
+                                    <TableHead>Code</TableHead>
+                                    <TableHead>Discount</TableHead>
+                                    <TableHead>Usage</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Created</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
-                            ) : (
-                                coupons.map((coupon) => (
-                                    <TableRow key={coupon.id} className="group">
-                                        <TableCell className="font-mono font-medium text-primary">
-                                            {coupon.code}
-                                            {coupon.min_spend > 0 && <span className="block text-xs text-muted-foreground font-sans">Min: {coupon.min_spend}</span>}
-                                        </TableCell>
-                                        <TableCell>
-                                            {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `ZMW ${coupon.discount_value}`}
-                                        </TableCell>
-                                        <TableCell>
-                                            {coupon.used_count} / {coupon.usage_limit || "∞"}
-                                        </TableCell>
-                                        <TableCell>
-                                            {coupon.is_active ? (
-                                                <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-200">Active</Badge>
-                                            ) : (
-                                                <Badge variant="outline" className="bg-slate-500/10 text-slate-600 border-slate-200">Inactive</Badge>
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="text-muted-foreground text-sm">
-                                            {format(new Date(coupon.created_at), 'MMM d, yyyy')}
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" className="h-8 w-8 p-0">
-                                                        <span className="sr-only">Open menu</span>
-                                                        <MoreHorizontal className="h-4 w-4" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => handleToggleStatus(coupon.id, coupon.is_active)}>
-                                                        {coupon.is_active ? <><Ban className="mr-2 h-4 w-4" /> Deactivate</> : <><CheckCircle className="mr-2 h-4 w-4" /> Activate</>}
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem className="text-red-600 focus:text-red-600" onClick={() => handleDelete(coupon.id)}>
-                                                        <Trash2 className="mr-2 h-4 w-4" /> Delete
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                            </TableHeader>
+                            <TableBody>
+                                {coupons.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                                            No coupons found. Create one to get started!
                                         </TableCell>
                                     </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
-            </CardContent>
-        </Card>
+                                ) : (
+                                    coupons.map((coupon) => (
+                                        <TableRow key={coupon.id} className="group">
+                                            <TableCell className="font-mono font-medium text-primary">
+                                                {coupon.code}
+                                                {coupon.min_spend > 0 && <span className="block text-xs text-muted-foreground font-sans">Min: {coupon.min_spend}</span>}
+                                            </TableCell>
+                                            <TableCell>
+                                                {coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `ZMW ${coupon.discount_value}`}
+                                            </TableCell>
+                                            <TableCell>
+                                                {coupon.used_count} / {coupon.usage_limit || "∞"}
+                                            </TableCell>
+                                            <TableCell>
+                                                {coupon.is_active ? (
+                                                    <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-200">Active</Badge>
+                                                ) : (
+                                                    <Badge variant="outline" className="bg-slate-500/10 text-slate-600 border-slate-200">Inactive</Badge>
+                                                )}
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground text-sm">
+                                                {format(new Date(coupon.created_at), 'MMM d, yyyy')}
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" className="h-8 w-8 p-0">
+                                                            <span className="sr-only">Open menu</span>
+                                                            <MoreHorizontal className="h-4 w-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem onClick={() => handleToggleStatus(coupon.id, coupon.is_active)}>
+                                                            {coupon.is_active ? <><Ban className="mr-2 h-4 w-4" /> Deactivate</> : <><CheckCircle className="mr-2 h-4 w-4" /> Activate</>}
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem className="text-red-600 focus:text-red-600" onClick={() => handleDelete(coupon.id)}>
+                                                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </CardContent>
+            </Card>
         </div >
     );
 }
