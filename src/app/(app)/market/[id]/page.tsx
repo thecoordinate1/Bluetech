@@ -95,7 +95,7 @@ export default function MarketProductDetailsPage() {
 
         setIsProcessingPayment(true);
         const basePrice = product.supplier_price || product.price;
-        const importFee = basePrice * 0.125;
+        const importFee = basePrice * 0.07;
 
         try {
             // 1. Initiate Payment
@@ -388,9 +388,9 @@ export default function MarketProductDetailsPage() {
                 isOpen={isPaymentModalOpen}
                 onClose={() => setIsPaymentModalOpen(false)}
                 onConfirm={handlePaymentConfirm}
-                amount={(product?.supplier_price || product?.price || 0) * 0.125}
+                amount={(product?.supplier_price || product?.price || 0) * 0.07}
                 title={`Import ${product?.name}`}
-                description={`Pay import fee (12.5% of wholesale price: ZMW ${((product?.supplier_price || product?.price || 0) * 0.125).toFixed(2)}) to add this product to your store.`}
+                description={`Pay import fee (7% of wholesale price: ZMW ${((product?.supplier_price || product?.price || 0) * 0.07).toFixed(2)}) to add this product to your store.`}
                 isProcessing={isProcessingPayment}
                 remainingCredits={importCredits}
                 onUseCredit={handleUseCredit}
