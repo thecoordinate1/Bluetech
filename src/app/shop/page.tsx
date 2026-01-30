@@ -124,10 +124,12 @@ export default async function ShopPage() {
                                     </div>
 
                                     {/* Commission Display */}
-                                    {product.attributes && product.attributes['commission'] && (
+                                    {((product.attributes && product.attributes['commission']) || store.commission_rate) && (
                                         <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-md">
                                             <Star className="h-3 w-3 fill-current" />
-                                            <span>Commission: {product.attributes['commission']}</span>
+                                            <span>
+                                                Commission: {product.attributes?.['commission'] || (store.commission_rate ? `${store.commission_rate}%` : '')}
+                                            </span>
                                         </div>
                                     )}
 
@@ -140,7 +142,7 @@ export default async function ShopPage() {
 
                                 <CardFooter className="p-5 pt-0 mt-auto">
                                     <Button className="w-full font-semibold shadow-sm" size="lg">
-                                        Request to Buy
+                                        Ready to Buy
                                     </Button>
                                 </CardFooter>
                             </Card>
