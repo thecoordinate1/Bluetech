@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { UploadForm } from "./upload-form";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminUploadPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
