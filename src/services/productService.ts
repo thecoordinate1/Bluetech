@@ -226,6 +226,7 @@ export async function createProduct(
     .from('products')
     .insert({
       store_id: storeId,
+      order_price: order_price,
       ...productDataForDb,
     })
     .select(COMMON_PRODUCT_SELECT)

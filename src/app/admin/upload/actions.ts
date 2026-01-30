@@ -17,10 +17,10 @@ export async function uploadProduct(prevState: any, formData: FormData) {
     const name = formData.get('name') as string;
     const description = formData.get('description') as string;
     const price = parseFloat(formData.get('price') as string);
-    const commission = formData.get('commission') as string;
+    const wholesalePrice = parseFloat(formData.get('wholesalePrice') as string);
     const image = formData.get('image') as File;
 
-    if (!name || isNaN(price)) {
+    if (!name || isNaN(price) || isNaN(wholesalePrice)) {
         return { error: 'Invalid input' };
     }
 
@@ -37,15 +37,14 @@ export async function uploadProduct(prevState: any, formData: FormData) {
         store.id,
         {
             name,
-            category: 'General', // Default or add field if needed
+            category: 'General',
             price,
-            stock: 100, // Default stock
+            order_price: wholesalePrice,
+            stock: 100,
             status: 'Active',
             full_description: description || '',
             description: description || '',
-            attributes: {
-                commission: commission
-            }
+            attributes: {}
         },
         image.size > 0 ? [{ file: image, order: 1 }] : []
     );

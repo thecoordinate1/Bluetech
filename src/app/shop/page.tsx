@@ -123,9 +123,27 @@ export default async function ShopPage() {
                                         </span>
                                     </div>
 
-                                    {/* Commission Display */}
-                                    {((product.attributes && product.attributes['commission']) || store.commission_rate) && (
-                                        <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-md">
+                                    {/* Commission/Profit Display */}
+                                    {product.order_price !== null && product.order_price !== undefined && (
+                                        <div className="flex flex-col gap-1 p-3 bg-primary/5 rounded-xl border border-primary/20 shadow-sm">
+                                            <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                                <span>Your Commission</span>
+                                                <span className="font-bold text-primary">Profit</span>
+                                            </div>
+                                            <div className="flex items-baseline justify-between">
+                                                <span className="text-lg font-black text-primary">
+                                                    ZMW {(product.price - product.order_price).toLocaleString()}
+                                                </span>
+                                                <span className="text-[10px] font-medium px-1.5 py-0.5 bg-primary text-primary-foreground rounded-full">
+                                                    {Math.round(((product.price - product.order_price) / product.price) * 100)}% Margin
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Fallback Legacy Commission Badge */}
+                                    {(!product.order_price && ((product.attributes && product.attributes['commission']) || store.commission_rate)) && (
+                                        <div className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 w-fit px-2 py-1 rounded-md border border-primary/20">
                                             <Star className="h-3 w-3 fill-current" />
                                             <span>
                                                 Commission: {product.attributes?.['commission'] || (store.commission_rate ? `${store.commission_rate}%` : '')}

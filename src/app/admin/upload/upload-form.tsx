@@ -92,13 +92,20 @@ export function UploadForm() {
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="commission" className="text-sm font-semibold">Commission</Label>
-                    <Input
-                        id="commission"
-                        name="commission"
-                        placeholder="e.g., 10% or K50"
-                        disabled={isPending}
-                    />
+                    <Label htmlFor="wholesalePrice" className="text-sm font-semibold">Wholesale Price (ZMW)</Label>
+                    <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">K</span>
+                        <Input
+                            id="wholesalePrice"
+                            name="wholesalePrice"
+                            type="number"
+                            step="0.01"
+                            className="pl-7"
+                            placeholder="0.00"
+                            required
+                            disabled={isPending}
+                        />
+                    </div>
                 </div>
             </div>
 
