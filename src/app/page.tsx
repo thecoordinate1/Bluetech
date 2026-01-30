@@ -22,7 +22,7 @@ export default function HomePage() {
 
 
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-foreground bg-size-200 animate-gradient-x animate-slide-in-from-bottom max-w-4xl">
-                Master Your E-Commerce Empire with <span className="text-primary">E-Ntemba</span>
+                Master Your E-Commerce Empire with <span className="text-primary">Entemba</span>
               </h1>
 
               <p className="max-w-[800px] text-lg md:text-xl text-muted-foreground animate-slide-in-from-bottom delay-100">
@@ -34,6 +34,11 @@ export default function HomePage() {
                   <Link href="/signup">
                     Start Selling
                     <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" className="h-12 px-8 text-lg rounded-full border-muted-foreground/20 hover:bg-muted/50 backdrop-blur-sm" asChild>
+                  <Link href="/shop">
+                    Browse Shop
                   </Link>
                 </Button>
                 <Button variant="outline" size="lg" className="h-12 px-8 text-lg rounded-full border-muted-foreground/20 hover:bg-muted/50 backdrop-blur-sm" asChild>
@@ -52,7 +57,7 @@ export default function HomePage() {
           <div className="container px-4 md:px-6">
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
               <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Everything you need to scale</h2>
-              <p className="text-lg text-muted-foreground">Stop wrestling with spreadsheets, whatsapp messages. E-Ntemba gives you the professional tools to manage your business like a pro.</p>
+              <p className="text-lg text-muted-foreground">Stop wrestling with spreadsheets, whatsapp messages. Entemba gives you the professional tools to manage your business like a pro.</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
@@ -131,7 +136,7 @@ export default function HomePage() {
             <div className="max-w-4xl mx-auto text-center space-y-8 p-12 rounded-3xl border border-primary/20 bg-background/50 backdrop-blur-lg shadow-2xl">
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Ready to transform your business?</h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Join thousands of successful vendors who trust E-Ntemba. No credit card required for the free trial.
+                Join thousands of successful vendors who trust Entemba. No credit card required for the free trial.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
                 <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-xl shadow-primary/20 hover:scale-105 transition-transform" asChild>
@@ -149,7 +154,7 @@ export default function HomePage() {
       </main>
 
       <Footer />
-    </div>
+    </div >
   );
 }
 

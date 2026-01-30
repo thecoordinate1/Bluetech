@@ -231,6 +231,42 @@ export async function getStoreById(storeId: string, userId: string): Promise<{ d
   return { data: { ...storeData, categories: categoriesArray, social_links: socialLinksData || [] } as StoreFromSupabase, error: null };
 }
 
+export async function getStoreByEmail(email: string): Promise<{ data: StoreFromSupabase | null, error: Error | null }> {
+  console.log(`[storeService.getStoreByEmail] Fetching store by contact_email: ${email}`);
+  
+  const { data: storeData, error: storeError } = await supabase
+    .from('stores')
+    .select(STORE_COLUMNS_TO_SELECT)
+    .eq('contact_email', email)
+    .single();
+
+  if (storeError) {
+    console.error(`[storeService.getStoreByEmail] Error fetching store by email ${email}:`, storeError);
+    return { data: null, error: mapSupabaseError(storeError, 'Store Retrieval by Email') };
+  }
+
+  if (!storeData) {
+    console.warn(`[storeService.getStoreByEmail] No store found with contact_email: ${email}`);
+    return { data: null, error: null };
+  }
+
+  // Categories are now natively arrays
+  const categoriesArray = storeData.categories || [];
+
+  // Fetch social links separately
+  const { data: socialLinksData, error: socialLinksError } = await supabase
+    .from('social_links')
+    .select('platform, url')
+    .eq('store_id', storeData.id);
+
+  if (socialLinksError) {
+    console.warn(`[storeService.getStoreByEmail] Error fetching social links for store ${storeData.id}:`, socialLinksError.message);
+    return { data: { ...storeData, categories: categoriesArray, social_links: [] } as StoreFromSupabase, error: null };
+  }
+
+  return { data: { ...storeData, categories: categoriesArray, social_links: socialLinksData || [] } as StoreFromSupabase, error: null };
+}
+
 
 export async function createStore(
   userId: string,
