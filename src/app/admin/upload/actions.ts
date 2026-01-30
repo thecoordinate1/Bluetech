@@ -21,8 +21,16 @@ export async function uploadProduct(prevState: any, formData: FormData) {
     const image = formData.get('image') as File;
 
     if (!name || isNaN(price) || isNaN(wholesalePrice)) {
+        console.error('[uploadProduct] Validation failed:', { name, price, wholesalePrice });
         return { error: 'Invalid input' };
     }
+
+    console.log('[uploadProduct] Form data received:', {
+        name,
+        price,
+        wholesalePrice,
+        wholesalePriceType: typeof wholesalePrice
+    });
 
     // Fetch store to attach product to
     // We assume the store is the one associated with this email
@@ -39,7 +47,7 @@ export async function uploadProduct(prevState: any, formData: FormData) {
             name,
             category: 'General',
             price,
-            order_price: wholesalePrice,
+            wholesale_price: wholesalePrice,
             stock: 100,
             status: 'Active',
             full_description: description || '',

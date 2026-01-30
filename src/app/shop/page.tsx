@@ -87,10 +87,10 @@ export default async function ShopPage() {
                             // Calculate Profit Amount
                             let profitAmount = 0;
                             let profitMargin = 0;
-                            const hasWholesale = product.order_price !== null && product.order_price !== undefined;
+                            const hasWholesale = product.wholesale_price !== null && product.wholesale_price !== undefined;
 
                             if (hasWholesale) {
-                                profitAmount = Number(product.price) - Number(product.order_price);
+                                profitAmount = Number(product.price) - Number(product.wholesale_price);
                                 profitMargin = Math.round((profitAmount / Number(product.price)) * 100);
                             } else if (store.commission_rate) {
                                 profitAmount = Number(product.price) * (Number(store.commission_rate) / 100);

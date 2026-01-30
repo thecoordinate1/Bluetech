@@ -41,6 +41,7 @@ export interface ProductPayload {
   category: string;
   price: number;
   order_price?: number | null;
+  wholesale_price?: number | null;
   stock: number;
   status: 'Active' | 'Draft' | 'Archived';
   description?: string | null;
@@ -79,6 +80,7 @@ export interface ProductFromSupabase {
   category: string;
   price: number; // This will now represent the base/default price
   order_price?: number | null;
+  wholesale_price?: number | null;
   stock: number; // This will now be an aggregation of variant stocks
   status: 'Active' | 'Draft' | 'Archived';
   description?: string | null;
@@ -144,7 +146,7 @@ async function uploadProductImage(
 }
 
 const COMMON_PRODUCT_SELECT = `
-  id, store_id, name, category, price, order_price, stock, status, description, full_description, sku, tags, weight_kg, dimensions_cm, attributes, created_at, updated_at, is_dropshippable, supplier_product_id, supplier_price,
+  id, store_id, name, category, price, order_price, wholesale_price, stock, status, description, full_description, sku, tags, weight_kg, dimensions_cm, attributes, created_at, updated_at, is_dropshippable, supplier_product_id, supplier_price,
   product_images(*)
 `;
 
@@ -219,14 +221,29 @@ export async function createProduct(
   images: { file: File; order: number }[]
 ): Promise<{ data: ProductFromSupabase | null; error: Error | null }> {
   console.log('[productService.createProduct] Creating product for store_id:', storeId);
-  console.log('[productService.createProduct] Creating product for store_id:', storeId);
-  const { order_price, ...productDataForDb } = productData;
+  console.log('[productService.createProduct] Product data received:', {
+    price: productData.price,
+    order_price: productData.order_price,
+    wholesale_price: productData.wholesale_price,
+    name: productData.name
+  });
+
+  const { order_price, wholesale_price, ...productDataForDb } = productData;
   if (productDataForDb.sku === "") productDataForDb.sku = null;
+
+  console.log('[productService.createProduct] Inserting into DB:', {
+    store_id: storeId,
+    order_price,
+    wholesale_price,
+    productName: productDataForDb.name
+  });
+
   const { data: newProduct, error: createError } = await supabase
     .from('products')
     .insert({
       store_id: storeId,
       order_price: order_price,
+      wholesale_price: wholesale_price,
       ...productDataForDb,
     })
     .select(COMMON_PRODUCT_SELECT)
