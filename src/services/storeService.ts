@@ -232,24 +232,49 @@ export async function getStoreById(storeId: string, userId: string): Promise<{ d
 }
 
 export async function getStoreByEmail(email: string): Promise<{ data: StoreFromSupabase | null, error: Error | null }> {
-  console.log(`[storeService.getStoreByEmail] Fetching store by contact_email: ${email}`);
-  
+  console.log(`[storeService.getStoreByEmail] Fetching store by email search: ${email}`);
+
+  // First attempt: Find store by contact_email
   const { data: storeData, error: storeError } = await supabase
     .from('stores')
     .select(STORE_COLUMNS_TO_SELECT)
     .eq('contact_email', email)
+    .order('created_at', { ascending: false })
+    .limit(1)
     .single();
 
-  if (storeError) {
-    console.error(`[storeService.getStoreByEmail] Error fetching store by email ${email}:`, storeError);
-    return { data: null, error: mapSupabaseError(storeError, 'Store Retrieval by Email') };
+  if (storeError && storeError.code !== 'PGRST116') {
+    console.error(`[storeService.getStoreByEmail] Error fetching by contact_email:`, storeError);
   }
 
-  if (!storeData) {
-    console.warn(`[storeService.getStoreByEmail] No store found with contact_email: ${email}`);
+  if (storeData) {
+    return processStoreData(storeData);
+  }
+
+  // Second attempt: Find store by vendor's email
+  console.log(`[storeService.getStoreByEmail] Not found by contact_email, trying vendor email...`);
+  const { data: vendorStores, error: vendorError } = await supabase
+    .from('stores')
+    .select(`${STORE_COLUMNS_TO_SELECT}, vendors!inner(email)`)
+    .eq('vendors.email', email)
+    .limit(1)
+    .single();
+
+  if (vendorError) {
+    console.error(`[storeService.getStoreByEmail] Error fetching by vendor email:`, vendorError);
+    return { data: null, error: mapSupabaseError(vendorError, 'Store Retrieval by Email') };
+  }
+
+  if (!vendorStores) {
+    console.warn(`[storeService.getStoreByEmail] No store found for email: ${email}`);
     return { data: null, error: null };
   }
 
+  return processStoreData(vendorStores as any);
+}
+
+// Helper to handle social links and formatting
+async function processStoreData(storeData: any): Promise<{ data: StoreFromSupabase | null, error: Error | null }> {
   // Categories are now natively arrays
   const categoriesArray = storeData.categories || [];
 
